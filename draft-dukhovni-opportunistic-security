@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
- <!ENTITY rfc4949 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4949.xml">
- <!ENTITY rfc5280 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5280.xml">
- <!ENTITY I-D.farrell-perpass-attack SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.farrell-perpass-attack.xml">
+  <!ENTITY rfc2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+  <!ENTITY rfc4949 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4949.xml">
+  <!ENTITY rfc5280 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5280.xml">
+  <!ENTITY rfc7258 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7258.xml">
 ]>
 
 <?rfc compact="yes" ?>
@@ -43,19 +44,20 @@
   <section title="Introduction">
 
    <t>
-     Historically, Internet security protocols have prioritized strong
-     protection for peers capable and motivated to absorb the associated
-     costs.  Since strong protection is not universally applicable,
-     while communications traffic was sometimes strongly secured, more
-     typically it was not protected at all.  The fact that most traffic
-     is unprotected facilitates nation-state pervasive monitoring (PM
-     <xref target="I-D.farrell-perpass-attack"/>) by making it
-     cost-effective (or at least not cost-prohibitive).  Indiscriminate
-     collection of communications traffic would be substantially less
-     attractive if security protocols were designed to operate at a
-     range of protection levels with encrypted transmission accessible
-     to most if not all peers, and stronger security still available
-     where required by policy or opportunistically negotiated.
+     Historically, Internet security protocols have prioritized
+     strong protection for peers capable and motivated to absorb
+     the associated costs.  Since strong protection is not universally
+     applicable, while communications traffic was sometimes strongly
+     secured, more typically it was not protected at all.  The fact
+     that most traffic is unprotected facilitates nation-state
+     pervasive monitoring (PM <xref target="RFC7258"/>) by making
+     it cost-effective (or at least not cost-prohibitive).
+     Indiscriminate collection of communications traffic would be
+     substantially less attractive if security protocols were
+     designed to operate at a range of protection levels with
+     encrypted transmission accessible to most if not all peers,
+     and stronger security still available where required by policy
+     or opportunistically negotiated.
    </t>
 
    <t>
@@ -144,9 +146,42 @@
     </list>
    </t>
 
+   <t>
+     In summary, opportunistic security is an umbrella term that
+     encompasses protocol designs that remove barriers to the
+     widespread use of encryption in the Internet.  The actual
+     protection provided by opportunistic security depends on the
+     capabilities of the communicating peers; opportunistic security
+     MUST attempt to at least encrypt network traffic, while allowing
+     fallback to cleartext with peers that do not appear to be
+     encryption capable.
+   </t>
+
+   <t>
+     It is important to note that opportunistic security is not
+     limited to unauthenticated encryption.  When possible,
+     opportunistic security SHOULD provide stronger security on a
+     peer-by-peer basis.  For example, some peers may be authenticated
+     via DANE, TOFU or other means.  Though authentication failure
+     MAY be a reason to abort a connection to a peer that is expected
+     to be authenticated, it MUST NOT instead lead to communication
+     in cleartext when encryption is an option.  Some sending MTAs
+     employing STARTTLS have been observed to abort TLS transmission
+     when the receiving MTA fails authentication, only to immediately
+     deliver the same message over a cleartext connection.  This
+     design blunder MUST be avoided.
+   </t>
+
   </section>
 
   <section title="Terminology" anchor="sec_terminology">
+
+   <t>
+     The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+     NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+     "MAY", and "OPTIONAL" in this document are to be interpreted
+     as described in <xref target="RFC2119"/>.
+   </t>
 
    <t>
      The following definitions are derived from the Internet Security
@@ -213,9 +248,10 @@
 
  <back>
   <references>
+   &rfc2119;
    &rfc4949;
    &rfc5280;
-   &I-D.farrell-perpass-attack;
+   &rfc7258;
   </references>
  </back>
 </rfc>
