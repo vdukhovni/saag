@@ -52,56 +52,67 @@
   <section title="Introduction">
 
    <t>
+     Encryption is easy, but key management is difficult.  No single
+     key management approach has seen universal adoption.  The Web
+     PKI key management system, which is based on broadly trusted
+     public certification authorities (CAs), has too many trusted
+     authorities and imposes burdens that not all peers are willing
+     to bear.  In addition, web PKI public CAs are not sufficient
+     to secure communications when the peer reference identity
+     (<xref target="RFC6125"/>) is obtained indirectly over an
+     insecure channel or communicating parties don't agree on a
+     trusted CA.
+   </t>
+
+   <t>
+     At this time, DNSSEC (<xref target="RFC4033"/>) is not
+     sufficiently widely adopted to make DANE (<xref target="RFC6698"/>)
+     a viable ubiquitous alternative.  Trust on first use (TOFU)
+     key management models (as with saved SSH fingerprints and
+     various certificate pinning approaches) don't protect initial
+     contact and require user intervention when keys change
+     unexpectedly.
+   </t>
+
+   <t>
      Historically, Internet security protocols have prioritized
-     comprehensive protection against both passive and active attacks
-     for peers able and motivated to absorb the associated costs.
-     Since protection against active attacks relies on authentication,
-     which at Internet scale is not universally available, while
-     communications traffic is sometimes strongly protected, more
-     typically it is not protected at all.  The fact that most
-     traffic is unprotected facilitates nation-state pervasive
-     monitoring (PM <xref target="RFC7258"/>) by making it
-     cost-effective (or at least not cost-prohibitive).  Indiscriminate
-     collection of communications traffic would be substantially
-     less attractive if security protocols were designed to operate
-     at a range of protection levels; with encrypted transmission
-     accessible to most if not all peers, and protection against
-     active attacks still employed where unconditionally required
-     by policy or else discovered to be possible with a given peer.
+     comprehensive protection against both passive and active
+     attacks.  Protection against active attacks requires authentication,
+     but the lack of a universal key management approach has created
+     a situation in which only a minority of peers can be authenticated.
+     When protocols only offer the options of an authenticated
+     secure channel or cleartext, most traffic is sent in the clear.
+     As a result, while communications traffic is sometimes strongly
+     protected, more typically it is not protected at all.  The
+     fact that most traffic is unencrypted facilitates nation-state
+     pervasive monitoring (PM <xref target="RFC7258"/>) by making
+     it cost-effective, or at least not cost-prohibitive.
    </t>
 
    <t>
-     Encryption is easy, but key management is difficult.  Key
-     management at Internet scale remains an incompletely solved
-     problem.  The Web PKI key management
-     model, which is based on broadly trusted public certification
-     authorities (CAs), introduces costs that not all peers are
-     willing to bear.  Web PKI public CAs are not sufficient to secure communications
-     when the peer reference identity (<xref target="RFC6125"/>)
-     is obtained indirectly over an insecure channel or communicating
-     parties don't agree on a mutually trusted CA.  At this time,
-     DNSSEC (<xref target="RFC4033"/>) is not sufficiently widely
-     adopted to make DANE (<xref target="RFC6698"/>) a viable
-     alternative at scale.  Trust on first use (TOFU) key management
-     models (as with saved SSH fingerprints and various certificate
-     pinning approaches) don't protect initial contact and require
-     user intervention when key continuity fails.
+     If security protocols were designed to at least encrypt traffic
+     whenever possible, bulk collection of communications traffic
+     would be substantially less attractive.  Therefore, in order
+     to make encryption more ubiquitous, authentication needs to
+     be optional.  Against the backdrop of pervasive monitoring,
+     when authenticated communication is not possible, unauthenticated
+     encryption is preferable to cleartext.  Opportunistic security
+     encourages peers to employ as much security as possible, without
+     falling back on unnecessarily weak options.  In particular,
+     opportunistic security encourages unauthenticated encryption
+     when authentication is not an option.
    </t>
 
    <t>
-     Without Internet-scale key management, authentication required
-     for protection against active attacks is often not possible.
-     When protocols only offer the options of authenticated secure
-     channels or cleartext, most traffic is sent in the clear.
-     Therefore, in order to make encryption more ubiquitous,
-     authentication needs to be optional.  When authenticated
-     communication is not possible, unauthenticated encryption is
-     preferable to cleartext transmission, in that it addresses
-     pervasive monitoring <xref target="RFC7258"/>.  Opportunistic
-     security encourages peers to employ as much security as possible,
-     without falling back on unnecessarily weak options.  In
-     particular, opportunistic security encourages unauthenticated
-     encryption when authentication is not an option.
+     It is important to keep in mind that pervasive monitoring is
+     not the only risk, and active attacks should not be ignored.
+     Opportunistic security is not limited to unauthenticated
+     encryption.  Rather, OS protocols can operate at a range of
+     protection levels; with encrypted transmission accessible to
+     most if not all peers.  Protection against active attacks is
+     still employed where unconditionally required by policy or
+     else determined to be applicable with a given peer (via TOFU
+     or perhaps published DANE TLSA RRs, etc.).
    </t>
 
   </section>
