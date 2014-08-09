@@ -35,13 +35,19 @@
 
   <abstract>
    <t>
-     This memo defines the term "opportunistic security".  In
-     contrast to the established approach of employing protection
-     against both passive and active attacks or else (frequently)
-     no protection at all, opportunistic security strives to deliver
-     at least some protection most of the time.  The primary goal
-     is therefore broad interoperability, with security policy
-     tailored to the capabilities of peer systems.
+     This memo introduces the "opportunistic security" design
+     pattern.  In contrast to the established approach of employing
+     protection against both passive and active attacks or else
+     (frequently) no protection at all, designs based on opportunistic
+     security (OS) strive to deliver at least some protection most
+     of the time.  The primary goal of OS is to remove barriers to
+     widespread adoption, by tailoring the minimum acceptable protection
+     level to the capabilities of the peer systems.  At the very
+     least, opportunistic security aims to employ unauthenticated
+     encryption when authentication is not possible.  However, when
+     communicating with legacy systems that do not support any form
+     of encryption, opportunistic security may also employ transmission
+     in cleartext.
    </t>
   </abstract>
 
@@ -53,11 +59,11 @@
    <t>
      Historically, Internet security protocols have prioritized
      comprehensive protection against both passive and active attacks
-     for peers capable and motivated to absorb the associated costs.
+     for peers able and motivated to absorb the associated costs.
      Since protection against active attacks relies on authentication,
      which at Internet scale is not universally available, while
-     communications traffic was sometimes strongly protected, more
-     typically it was not protected at all.  The fact that most
+     communications traffic is sometimes strongly protected, more
+     typically it is not protected at all.  The fact that most
      traffic is unprotected facilitates nation-state pervasive
      monitoring (PM <xref target="RFC7258"/>) by making it
      cost-effective (or at least not cost-prohibitive).  Indiscriminate
@@ -65,21 +71,21 @@
      less attractive if security protocols were designed to operate
      at a range of protection levels; with encrypted transmission
      accessible to most if not all peers, and protection against
-     active attacks still available where required by policy or
-     opportunistically negotiated.
+     active attacks still employed where unconditionally required
+     by policy or else discovered to be possible with a given peer.
    </t>
 
    <t>
      Encryption is easy, but key management is difficult.  Key
      management at Internet scale remains an incompletely solved
-     problem.  The PKIX (<xref target="RFC5280"/>) key management
+     problem.  The Web PKI key management
      model, which is based on broadly trusted public certification
      authorities (CAs), introduces costs that not all peers are
-     willing to bear.  PKIX is not sufficient to secure communications
+     willing to bear.  Web PKI public CAs are not sufficient to secure communications
      when the peer reference identity (<xref target="RFC6125"/>)
      is obtained indirectly over an insecure channel or communicating
-     parties don't agree on a mutually trusted CA.  DNSSEC (<xref
-     target="RFC4033"/>) is not at this time sufficiently widely
+     parties don't agree on a mutually trusted CA.  At this time,
+     DNSSEC (<xref target="RFC4033"/>) is not sufficiently widely
      adopted to make DANE (<xref target="RFC6698"/>) a viable
      alternative at scale.  Trust on first use (TOFU) key management
      models (as with saved SSH fingerprints and various certificate
@@ -91,13 +97,14 @@
      Without Internet-scale key management, authentication required
      for protection against active attacks is often not possible.
      When protocols only offer the options of authenticated secure
-     channels or else cleartext, most traffic is sent in the clear.
+     channels or cleartext, most traffic is sent in the clear.
      Therefore, in order to make encryption more ubiquitous,
      authentication needs to be optional.  When authenticated
      communication is not possible, unauthenticated encryption is
-     still substantially stronger than cleartext.  Opportunistic
+     preferable to cleartext transmission, in that it addresses
+     pervasive monitoring <xref target="RFC7258"/>.  Opportunistic
      security encourages peers to employ as much security as possible,
-     without falling back to unnecessarily weak options.  In
+     without falling back on unnecessarily weak options.  In
      particular, opportunistic security encourages unauthenticated
      encryption when authentication is not an option.
    </t>
@@ -157,28 +164,31 @@
 
      <t hangText="Interoperate to maximize deployment:"> The primary
      goal of designs that feature opportunistic security is to be
-     able to communicate with any reasonably configured peer.  If
-     many peers are only capable of cleartext, then it is acceptable
+     able to communicate with any correctly configured peer.  If a
+     non-negligible number of potential peers are only capable of
+     cleartext, then it is acceptable
      to fall back to cleartext when encryption is not possible.  If
      authentication is only possible for some peers, then it is
      acceptable to authenticate only those peers and not the rest.
-     Interoperability must be possible without a need for the
+     Interoperability must be possible without a prior need for the
      administrators of communicating systems to coordinate security
-     settings.  Applications employing opportunistic security need
+     policy.  Applications employing opportunistic security need
      to be deployable at Internet scale, with each peer independently
      configured to meet its own security needs (within the practical
-     bounds of the application protocol).  Opportunistic security
+     bounds of the employed protocol).  Opportunistic security
      must not get in the way of the peers communicating if neither
-     end is misconfigured.  </t>
+     end is misconfigured (i.e., neither publishes or negotiates
+     security services that are not available or don't function
+     correctly).  </t>
 
      <t hangText="Maximize security peer by peer:"> Subject to the
      above Internet-scale interoperability goal, opportunistic
      security strives to maximize security based on the capabilities
-     of the peer (or peers).  For some opportunistic security
+     of the peers.  For some opportunistic security
      protocols the maximal protection possible may be just
      unauthenticated encryption to address passive monitoring.  For
-     others, protection against active MiTM attacks may be an option.
-     Opportunistic security protocols may at times refuse to operate
+     others, protection against active attacks may be an option.
+     Opportunistic security protocols may, when applicable, refuse to communicate
      with peers for which higher security is expected, but for some
      reason not achieved.  The conditions under which connections
      fail should generally be limited to operational errors at one
@@ -190,7 +200,7 @@
      protocol MUST interoperably achieve at least unauthenticated
      encryption between peer systems that don't explicitly disable
      this capability.  To facilitate incremental deployment,
-     opportuistic security protocols may tolerate cleartext connections
+     opportunistic security protocols may tolerate cleartext connections
      or sessions with peers that don't support encryption.  Over
      time, as peer software is updated to support opportunistic
      security, only legacy systems or a minority of systems where
@@ -211,10 +221,10 @@
    <t>
      In summary, opportunistic security is an umbrella term that
      encompasses protocol designs that remove barriers to the
-     widespread use of encryption in the Internet.  The actual
+     widespread use of encryption on the Internet.  The actual
      protection provided by opportunistic security depends on the
-     capabilities of the communicating peers; opportunistic security
-     MUST attempt to at least encrypt network traffic, while allowing
+     capabilities of the communicating peers.  Opportunistic security
+     MUST at least aim to encrypt network traffic, while allowing
      fallback to cleartext with peers that do not appear to be
      encryption capable.
    </t>
@@ -226,7 +236,7 @@
      peer-by-peer basis.  For example, some peers may be authenticated
      via DANE, TOFU or other means.  Though authentication failure
      MAY be a reason to abort a connection to a peer that is expected
-     to be authenticated, it MUST NOT instead lead to communication
+     to be authenticated, it MUST NOT then lead to communication
      in cleartext when encryption is an option.  Some Message
      Transfer Agents (MTAs, <xref target="RFC5598"/> Section 4.3.2)
      employing STARTTLS (<xref target="RFC3207"/>) have been observed
