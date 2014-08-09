@@ -35,19 +35,14 @@
 
   <abstract>
    <t>
-     This memo introduces the "opportunistic security" design
-     pattern.  In contrast to the established approach of employing
-     protection against both passive and active attacks or else
-     (frequently) no protection at all, designs based on opportunistic
-     security (OS) strive to deliver at least some protection most
-     of the time.  The primary goal of OS is to remove barriers to
-     widespread adoption, by tailoring the minimum acceptable protection
-     level to the capabilities of the peer systems.  At the very
-     least, opportunistic security aims to employ unauthenticated
-     encryption when authentication is not possible.  However, when
-     communicating with legacy systems that do not support any form
-     of encryption, opportunistic security may also employ transmission
-     in cleartext.
+     This memo introduces the "Opportunistic Security" (OS) protocol
+     design pattern.  Protocol designs based on OS depart from the
+     established practice of employing either protection against
+     both passive and active attacks or otherwise (frequently in
+     practice) no protection at all.  OS protocols tailor the minimum
+     acceptable channel security to the capabilities of the peer
+     systems.  As a result at least some protection is provided
+     most of the time.
    </t>
   </abstract>
 
