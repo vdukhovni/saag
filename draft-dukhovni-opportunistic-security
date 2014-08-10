@@ -65,7 +65,7 @@
      to bear.  In addition, web PKI public CAs are not sufficient
      to secure communications when the peer reference identifier
      (Section 1.8 of <xref target="RFC6125"/>) is obtained indirectly
-     over an insecure channel or communicating parties don't agree
+     over an insecure channel, or when the communicating parties don't agree
      on a trusted CA.
    </t>
 
@@ -73,15 +73,15 @@
      At this time, DNS Security (DNSSEC <xref target="RFC4033"/>)
      is not sufficiently widely adopted to make DNS-Based Authentication
      of Named Entities (DANE <xref target="RFC6698"/>) a viable
-     ubiquitous alternative.  Trust on first use (TOFU) key management
-     models (as with saved SSH fingerprints and various certificate
-     pinning approaches) don't protect initial contact and require
+     ubiquitous alternative to CAs.  Trust on first use (TOFU) key management
+     models (such as saved SSH fingerprints and various certificate
+     pinning approaches) don't protect initial contact, and require more
      user intervention when keys change unexpectedly.
    </t>
 
    <t>
      Historically, Internet security protocols have prioritized
-     comprehensive protection against both passive and active
+     comprehensive cryptographic protection against both passive and active
      attacks.  Protection against active attacks requires authentication,
      but the lack of a universal key management approach has created
      a situation in which only a minority of peers can be authenticated.
@@ -89,19 +89,31 @@
      secure channel or cleartext, most traffic is sent in the clear.
      As a result, while communications traffic is sometimes strongly
      protected, more typically it is not protected at all.  The
-     fact that most traffic is unencrypted facilitates nation-state
-     pervasive monitoring (PM <xref target="RFC7258"/>) by making
-     it cost-effective, or at least not cost-prohibitive.
+     fact that most traffic is unencrypted makes
+     pervasive monitoring by  nation-stats easier by making
+     it cost-effective, or at least not cost-prohibitive; see <xref target="RFC7258"/>
+     for more detail.
    </t>
 
    <t>
-     If security protocols were designed to at least encrypt traffic
+     If security protocols were designed to encrypt traffic
      whenever possible, bulk collection of communications traffic
-     would be substantially less attractive.  Therefore, in order
+     would be substantially less attractive.  Even if one does not
+     care about bulk data collection, data collection by individual
+     malicious actors or small criminal organizations is still a
+     significant problem for individuals and organizations.  Using the
+     opportunistic security design makes collection by all these
+     actors more difficult.
+   </t>
+
+   <t>
+     In order
      to make encryption more ubiquitous, authentication needs to
-     be optional.  Against the backdrop of pervasive monitoring,
+     be optional.  Regardless of the size of the adversary,
      when authenticated communication is not possible, unauthenticated
-     encryption is preferable to cleartext.  Opportunistic security
+     encryption is always preferable to cleartext.  The opportunistic
+     security design pattern always allows a step up from cleartext,
+     and never replaces authenticated encryption. Opportunistic security
      encourages peers to employ as much security as possible, without
      falling back on unnecessarily weak options.  In particular,
      opportunistic security encourages unauthenticated encryption
@@ -109,15 +121,11 @@
    </t>
 
    <t>
-     It is important to keep in mind that pervasive monitoring is
-     not the only risk, and active attacks should not be ignored.
-     Opportunistic security is not limited to unauthenticated
-     encryption.  Rather, OS protocols can operate at a range of
-     protection levels; with encrypted transmission accessible to
+     The opportunistic security design patter can operate at a range of
+     protection levels, with encrypted transmission accessible to
      most if not all peers.  Protection against active attacks is
      still employed where unconditionally required by policy or
-     else determined to be applicable with a given peer (via TOFU
-     or perhaps published DANE TLSA RRs, etc.).
+     else determined to be applicable with a given peer.
    </t>
 
   </section>
@@ -128,7 +136,10 @@
      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
      "MAY", and "OPTIONAL" in this document are to be interpreted
-     as described in <xref target="RFC2119"/>.
+     as described in <xref target="RFC2119"/>.  In this document,
+     these key words are always used to achieve better security,
+     not to increase interoperability, although the OS design
+     pattern never reduces interoperability.
    </t>
 
    <t>
@@ -136,14 +147,14 @@
        <t hangText="Perfect Forward Secrecy (PFS):"> For a key
        agreement protocol, the property that compromises long-term
        keying material does not compromise session keys that were
-       previously derived from the long-term material.  (Page 218
-       of <xref target="RFC4949"/>) </t>
+       previously derived from the long-term material.  (Definition
+       taken from <xref target="RFC4949"/>.) </t>
 
        <t hangText="Man-in-the-Middle (MiTM) attack:"> A form of
        active wiretapping attack in which the attacker intercepts
        and selectively modifies communicated data to masquerade as
        one or more of the entities involved in a communication
-       association.  (Page 186 of <xref target="RFC4949"/>).
+       association.  (Definition taken from <xref target="RFC4949"/>).
        Masquerading enables the MiTM to violate the confidentiality
        and/or the integrity of communicated data passing through
        it.  </t>
@@ -159,12 +170,11 @@
        "leap of faith" (LoF) is sometimes used as a synonym.</t>
 
        <t hangText="Unauthenticated Encryption:">Encryption using
-       a key agreement technique that enables unauthenticated
-       communication between parties.  In typical usage, this means
+       a key agreement technique that does not authenticate the identities
+       of the peers.
+       In typical usage, this means
        that the initiator (client) has not verified the identity
        of the target (server), making MiTM attacks possible.
-       Communication in which only the server verifies the identity
-       of the client is generally still vulnerable to MiTM attacks. </t>
      </list>
    </t>
 
