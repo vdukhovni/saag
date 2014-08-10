@@ -6,7 +6,6 @@
   <!ENTITY rfc4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
   <!ENTITY rfc4949 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4949.xml">
   <!ENTITY rfc5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
-  <!ENTITY rfc5280 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5280.xml">
   <!ENTITY rfc5598 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5598.xml">
   <!ENTITY rfc6125 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6125.xml">
   <!ENTITY rfc6698 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6698.xml">
@@ -58,20 +57,20 @@
      public certification authorities (CAs), has too many trusted
      authorities and imposes burdens that not all peers are willing
      to bear.  In addition, web PKI public CAs are not sufficient
-     to secure communications when the peer reference identity
-     (<xref target="RFC6125"/>) is obtained indirectly over an
-     insecure channel or communicating parties don't agree on a
-     trusted CA.
+     to secure communications when the peer reference identifier
+     (Section 1.8 of <xref target="RFC6125"/>) is obtained indirectly
+     over an insecure channel or communicating parties don't agree
+     on a trusted CA.
    </t>
 
    <t>
-     At this time, DNSSEC (<xref target="RFC4033"/>) is not
-     sufficiently widely adopted to make DANE (<xref target="RFC6698"/>)
-     a viable ubiquitous alternative.  Trust on first use (TOFU)
-     key management models (as with saved SSH fingerprints and
-     various certificate pinning approaches) don't protect initial
-     contact and require user intervention when keys change
-     unexpectedly.
+     At this time, DNS Security (DNSSEC <xref target="RFC4033"/>)
+     is not sufficiently widely adopted to make DNS-Based Authentication
+     of Named Entities (DANE <xref target="RFC6698"/>) a viable
+     ubiquitous alternative.  Trust on first use (TOFU) key management
+     models (as with saved SSH fingerprints and various certificate
+     pinning approaches) don't protect initial contact and require
+     user intervention when keys change unexpectedly.
    </t>
 
    <t>
@@ -127,21 +126,21 @@
    </t>
 
    <t>
-     The following definitions are derived from the Internet Security
-     Glossary <xref target="RFC4949" />, where applicable.
-
      <list style="hanging">
-       <t hangText="Perfect Forward Secrecy (PFS):">For a key management
-       protocol, the property that compromise of long-term keys does not
-       compromise session/traffic/content keys that are derived from or
-       distributed using the long-term keys.  </t>
+       <t hangText="Perfect Forward Secrecy (PFS):"> For a key
+       agreement protocol, the property that compromises long-term
+       keying material does not compromise session keys that were
+       previously derived from the long-term material.  (Page 218
+       of <xref target="RFC4949"/>) </t>
 
-       <t hangText="Man-in-the-Middle attack (MiTM):">A form of active
-       wiretapping attack in which an attacker intercepts and may
-       selectively modify communicated data to masquerade as one of the
-       entities involved in a communication.  Masquerading enables the
-       MiTM to violate the confidentiality and/or the integrity of
-       communicated data passing through it.  </t>
+       <t hangText="Man-in-the-Middle (MiTM) attack:"> A form of
+       active wiretapping attack in which the attacker intercepts
+       and selectively modifies communicated data to masquerade as
+       one or more of the entities involved in a communication
+       association.  (Page 186 of <xref target="RFC4949"/>).
+       Masquerading enables the MiTM to violate the confidentiality
+       and/or the integrity of communicated data passing through
+       it.  </t>
 
        <t hangText="Trust on First Use (TOFU):">In a protocol, TOFU
        typically consists of accepting an asserted identity, without
@@ -153,12 +152,97 @@
        communications.  The SSH protocol makes use of TOFU. The phrase
        "leap of faith" (LoF) is sometimes used as a synonym.</t>
 
-       <t hangText="Unauthenticated Encryption:">Encryption using a key
-       management technique that enables unauthenticated communication
-       between parties. The communication may be 1-way or 2-way
-       unauthenticated.  If 1-way, the initiator (client) or the target
-       (server) may be anonymous.</t>
+       <t hangText="Unauthenticated Encryption:">Encryption using
+       a key agreement technique that enables unauthenticated
+       communication between parties.  In typical usage, this means
+       that the initiator (client) has not verified the identity
+       of the target (server), making MiTM attacks possible.
+       Communication in which only the server verifies the identity
+       of the client is generally still vulnerable to MiTM attacks. </t>
      </list>
+   </t>
+
+  </section>
+
+  <section title="The Opportunistic Security Design Pattern">
+
+   <t>
+     Opportunistic Security is a protocol design pattern that aims
+     to remove barriers to the widespread use of encryption on the
+     Internet.  The actual protection provided by opportunistic
+     security depends on the capabilities of the communicating
+     peers.  To make this more precise it is important to point out
+     that the granularity of the applicable protection level is
+     rather coarse.  It is anticipated that in many cases, the
+     protection level is a choice between one of the following:
+   </t>
+
+   <t>
+       <list style="symbols">
+	 <t>
+	   No encryption (cleartext), which protects against neither
+	   passive nor active attacks.
+	 </t> <t>
+	   Unauthenticated encryption, which protects only against
+	   passive attacks.
+	 </t> <t>
+	   Authenticated encryption, which protects against both
+	   passive and acitve attacks.
+	 </t>
+       </list>
+   </t>
+
+   <t>
+     More fine-grained security policy such as the selection of a
+     particular encryption algorithm or key agreement protocol is
+     left to the underlying crypto protocols such as Transport Layer
+     Security (TLS <xref target="RFC5246"/>).  Note, TLS itself
+     cannot be said to either implement or lack opportunistic
+     security, that depends on how it is used, it is a flexible
+     building block for higher-level protocols which may be based
+     on the OS design pattern.  An OS protocol may demand more
+     stringent security from the underlying crypto protocols when
+     authenticated encryption is required than when only unauthenticated
+     encryption is employed.
+   </t>
+
+   <t>
+     Cleartext support is for backwards compatibility with already
+     deployed systems.  Cleartext transmission should, be avoided
+     in new OS protocol designs.  Even when cleartext needs to be
+     supported, protocol designs based on opportunistic security
+     MUST at least prefer to encrypt network traffic, while allowing
+     fallback to cleartext with peers that do not appear to be
+     encryption capable.
+   </t>
+
+   <t>
+     It is important to note that opportunistic security is not
+     limited to unauthenticated encryption.  Opportunistic security
+     protocols should, provide a means to enforce authentication
+     for those peers for which authentication is required by policy
+     or can be expected to succeed.  Enforcement of authentication
+     in an opportunistic protocol is not a contradiction.  Opportunistic
+     security does not start with an overly optimistic view of peer
+     capabilities only to be "disappointed" and settle for less
+     when the peer fails to live up to expectations.  Rather,
+     opportunistic security starts with a pessimistic view of the
+     baseline capabilities of all peers, and is "pleasantly surprised"
+     to learn that some peers can be expected to do more.
+   </t>
+
+   <t>
+     For example, some peers may be authenticated via DANE, TOFU
+     or other means.  Though authentication failure MAY be a reason
+     to abort a connection to a peer that is expected to be
+     authenticated, it MUST NOT then lead to communication in
+     cleartext when encryption is an option.  Some Message Transfer
+     Agents (MTAs, <xref target="RFC5598"/> Section 4.3.2) employing
+     STARTTLS (<xref target="RFC3207"/>) have been observed to abort
+     TLS (<xref target="RFC5246"/>) transmission when the receiving
+     MTA fails authentication, only to immediately deliver the same
+     message over a cleartext connection.  This design blunder MUST
+     be avoided.
    </t>
 
   </section>
@@ -225,31 +309,13 @@
    </t>
 
    <t>
-     In summary, opportunistic security is an umbrella term that
-     encompasses protocol designs that remove barriers to the
-     widespread use of encryption on the Internet.  The actual
-     protection provided by opportunistic security depends on the
-     capabilities of the communicating peers.  Opportunistic security
-     MUST at least aim to encrypt network traffic, while allowing
-     fallback to cleartext with peers that do not appear to be
-     encryption capable.
-   </t>
-
-   <t>
-     It is important to note that opportunistic security is not
-     limited to unauthenticated encryption.  When possible,
-     opportunistic security SHOULD provide stronger security on a
-     peer-by-peer basis.  For example, some peers may be authenticated
-     via DANE, TOFU or other means.  Though authentication failure
-     MAY be a reason to abort a connection to a peer that is expected
-     to be authenticated, it MUST NOT then lead to communication
-     in cleartext when encryption is an option.  Some Message
-     Transfer Agents (MTAs, <xref target="RFC5598"/> Section 4.3.2)
-     employing STARTTLS (<xref target="RFC3207"/>) have been observed
-     to abort TLS (<xref target="RFC5246"/>) transmission when the
-     receiving MTA fails authentication, only to immediately deliver
-     the same message over a cleartext connection.  This design
-     blunder MUST be avoided.
+     In summary, the opportunistic security design pattern encompasses
+     protocol designs that remove barriers to the widespread use
+     of encryption on the Internet.  The actual protection provided
+     by opportunistic security depends on the capabilities of the
+     communicating peers.  Opportunistic security MUST at least aim
+     to encrypt network traffic, while allowing fallback to cleartext
+     with peers that do not appear to be encryption capable.
    </t>
 
   </section>
@@ -287,7 +353,6 @@
    &rfc4033;
    &rfc4949;
    &rfc5246;
-   &rfc5280;
    &rfc5598;
    &rfc6125;
    &rfc6698;
