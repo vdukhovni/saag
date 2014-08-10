@@ -170,11 +170,12 @@
      Opportunistic Security is a protocol design pattern that aims
      to remove barriers to the widespread use of encryption on the
      Internet.  The actual protection provided by opportunistic
-     security depends on the capabilities of the communicating
-     peers.  To make this more precise it is important to point out
-     that the granularity of the applicable protection level is
-     rather coarse.  It is anticipated that in many cases, the
-     protection level is a choice between one of the following:
+     security depends on the advertised (in-band) or published
+     (out-of-band) capabilities of the communicating peers.  To
+     make this more precise it is important to point out that the
+     granularity of the applicable protection level is rather coarse.
+     It is anticipated that in most cases, the protection level is
+     a choice between one of the following:
    </t>
 
    <t>
@@ -190,6 +191,55 @@
 	   passive and active attacks.
 	 </t>
        </list>
+   </t>
+
+   <t>
+     Note that opportunistic security is not limited to unauthenticated
+     encryption.  Opportunistic security protocols should, provide
+     a means to enforce authentication for those peers for which
+     authentication is required by policy or can be expected to
+     succeed based on information provided by the peer.  Enforcement
+     of authentication in an opportunistic protocol is not a
+     contradiction.  Opportunistic security does not start with an
+     overly optimistic view of peer capabilities only to be
+     "disappointed" and settle for less when the peer fails to live
+     up to expectations.  Rather, opportunistic security starts
+     with a pessimistic view of the baseline capabilities of all
+     peers, and is "pleasantly surprised" to learn that some peers
+     can be expected to do more.  Thus opportunistic security aims
+     to do better than might be expected, rather than worse than
+     might be hoped.
+   </t>
+
+   <t>
+     For example, some peers may commit to support authentication
+     via DANE, TOFU or other means.  With DANE, the discovery via
+     DNSSEC-validated TLSA records that a peer is committed to
+     support authentication is downgrade-resistant.  Since DNSSEC
+     provides authenticated denial of existence, an MiTM attacker
+     needs to compromise DNSSEC in order to suppress a peer's TLSA
+     records.
+  </t>
+
+  <t>
+    Unless preempted by local or other policy, an opportunistic
+    security protocol first determines for a given peer whether
+    that peer supports authenticated encryption, unauthenticated
+    encryption or perhaps only cleartext.  The appropriate
+    communications security policy is then employed for each peer.
+  </t>
+
+  <t>
+     Though authentication failure MAY be a reason to abort a
+     connection to a peer that is expected to be authenticated, it
+     MUST NOT then lead to communication in cleartext when encryption
+     is an option.  Some Message Transfer Agents (MTAs, <xref
+     target="RFC5598"/> Section 4.3.2) employing STARTTLS (<xref
+     target="RFC3207"/>) have been observed to abort TLS (<xref
+     target="RFC5246"/>) transmission when the receiving MTA fails
+     authentication, only to immediately deliver the same message
+     over a cleartext connection.  This design blunder MUST be
+     avoided.
    </t>
 
    <t>
@@ -216,82 +266,54 @@
      encryption capable.
    </t>
 
-   <t>
-     It is important to note that opportunistic security is not
-     limited to unauthenticated encryption.  Opportunistic security
-     protocols should, provide a means to enforce authentication
-     for those peers for which authentication is required by policy
-     or can be expected to succeed.  Enforcement of authentication
-     in an opportunistic protocol is not a contradiction.  Opportunistic
-     security does not start with an overly optimistic view of peer
-     capabilities only to be "disappointed" and settle for less
-     when the peer fails to live up to expectations.  Rather,
-     opportunistic security starts with a pessimistic view of the
-     baseline capabilities of all peers, and is "pleasantly surprised"
-     to learn that some peers can be expected to do more.
-   </t>
-
-   <t>
-     For example, some peers may be determined to support authentication
-     via DANE, TOFU or other means.  With DANE, the discovery via
-     DNSSEC-validated TLSA records that a peer is expected to support
-     authentication is downgrade-resistant.  DNSSEC provides
-     authenticated denial of existence, and so an MiTM attacker needs
-     to compromise DNSSEC in order to suppress a peer's TLSA records.
-  </t>
-
-  <t>
-     Though authentication failure MAY be a reason to abort a
-     connection to a peer that is expected to be authenticated, it
-     MUST NOT then lead to communication in cleartext when encryption
-     is an option.  Some Message Transfer Agents (MTAs, <xref
-     target="RFC5598"/> Section 4.3.2) employing STARTTLS (<xref
-     target="RFC3207"/>) have been observed to abort TLS (<xref
-     target="RFC5246"/>) transmission when the receiving MTA fails
-     authentication, only to immediately deliver the same message
-     over a cleartext connection.  This design blunder MUST be
-     avoided.
-   </t>
-
   </section>
 
-  <section title="Opportunistic Security Design Philosophy">
+  <section title="Opportunistic Security Design Principles">
 
    <t>
     <list style="hanging">
 
-     <t hangText="Interoperate to maximize deployment:"> The primary
-     goal of designs that feature opportunistic security is to be
-     able to communicate with any correctly configured peer.  If a
+     <t hangText="Coexist with explicit policy:">Explicit security
+     policy preempts opportunistic behavior.  Administrators or
+     users may elect to disable opportunistic security for some or
+     all peers and set a fixed security policy not based on
+     capabilities advertised or published by the peer.  Alternatively,
+     opportunistic security might be enabled only for specified peers,
+     rather than by default.  Opportunistic security is not intended
+     to displace or preempt local policy.  However, it is expected that
+     where static policy is in conflict with reality, opportunistic
+     security will lead to better outcomes.  </t>
+
+     <t hangText="Prioritize not getting in the way:">
+     The primary goal of designs that feature opportunistic security
+     is to enable communication and maximize deployment.  If a
      non-negligible number of potential peers are only capable of
-     cleartext, then it is acceptable
-     to fall back to cleartext when encryption is not possible.  If
-     authentication is only possible for some peers, then it is
-     acceptable to authenticate only those peers and not the rest.
-     Interoperability must be possible without a prior need for the
-     administrators of communicating systems to coordinate security
-     policy.  Applications employing opportunistic security need
-     to be deployable at Internet scale, with each peer independently
-     configured to meet its own security needs (within the practical
-     bounds of the employed protocol).  Opportunistic security
-     must not get in the way of the peers communicating if neither
-     end is misconfigured (i.e., neither publishes or negotiates
-     security services that are not available or don't function
-     correctly).  </t>
+     cleartext, then it is acceptable to fall back to cleartext
+     when encryption is not possible.  If authentication is only
+     possible for some peers, then it is acceptable to authenticate
+     only those peers and not the rest.  Communication must be
+     possible without prior coordination of security policy by the
+     administrators of the peer systems.  Opportunistic security
+     needs to be deployable with each peer independently configured
+     to meet its security needs (within the practical bounds of the
+     employed protocol).  Opportunistic security must not get in
+     the way of the peers communicating if neither end is misconfigured
+     (i.e., neither publishes or negotiates security services that
+     are not available or don't function correctly).  </t>
 
      <t hangText="Maximize security peer by peer:"> Subject to the
-     above Internet-scale interoperability goal, opportunistic
-     security strives to maximize security based on the capabilities
-     of the peers.  For some opportunistic security
-     protocols the maximal protection possible may be just
-     unauthenticated encryption to address passive monitoring.  For
-     others, protection against active attacks may be an option.
-     Opportunistic security protocols may, when applicable, refuse to communicate
-     with peers for which higher security is expected, but for some
-     reason not achieved.  The conditions under which connections
-     fail should generally be limited to operational errors at one
-     or the other peer or an active attack, so that well-maintained
-     systems rarely encounter problems in normal use of opportunistic
+     above interoperability goal, opportunistic security strives
+     to maximize security based on the capabilities of the peers.
+     For some opportunistic security protocols the maximal protection
+     possible may be just unauthenticated encryption to address
+     passive monitoring.  For others, protection against active
+     attacks may be an option.  Opportunistic security protocols
+     may, when applicable, refuse to communicate with peers for
+     which higher security is expected, but for some reason not
+     achieved.  The conditions under which connections fail should
+     generally be limited to operational errors at one or the other
+     peer or an active attack, so that well-maintained systems
+     rarely encounter problems in normal use of opportunistic
      security.  </t>
 
      <t hangText="Encrypt by default:"> An opportunistic security
@@ -320,10 +342,11 @@
      In summary, the opportunistic security design pattern encompasses
      protocol designs that remove barriers to the widespread use
      of encryption on the Internet.  The actual protection provided
-     by opportunistic security depends on the capabilities of the
-     communicating peers.  Opportunistic security MUST at least aim
-     to encrypt network traffic, while allowing fallback to cleartext
-     with peers that do not appear to be encryption capable.
+     by opportunistic security depends on the advertised (in-band)
+     or published (out-of-band) capabilities of the communicating
+     peers.  Opportunistic security MUST at least aim to encrypt
+     network traffic, while allowing fallback to cleartext with
+     peers that do not appear to be encryption capable.
    </t>
 
   </section>
