@@ -21,8 +21,8 @@
 
 <rfc submissionType="independent" category="info" docName="draft-dukhovni-opportunistic-security-@@VERSION@@" ipr="trust200902">
  <front>
-  <title abbrev="Opportunistic Security">Opportunistic Security: some
-  protection most of the time</title>
+  <title abbrev="Opportunistic Security">Opportunistic Security: Some
+  Protection Most of the Time</title>
   <author initials="V." surname="Dukhovni" fullname="Viktor Dukhovni">
    <organization>Two Sigma</organization>
    <address>
@@ -36,13 +36,19 @@
    <t>
      This memo introduces the "Opportunistic Security" (OS) protocol
      design pattern.  Protocol designs based on OS depart from the
-     established practice of employing either protection against
-     both passive and active attacks or otherwise (frequently in
-     practice) no protection at all.  OS protocols tailor the minimum
+     established practice of employing cryptographic protection against
+     both passive and active attacks, or 
+     no protection at all.  OS protocols tailor the minimum
      acceptable channel security to the capabilities of the peer
-     systems.  As a result at least some protection is provided
+     systems.  As a result, at least some cryptographic protection is provided
      most of the time.
    </t>
+   <t>
+     This document is aimed primarily at people modifying protocols who want
+     to make those protocols more resistant to passive snooping. A secondary
+     audience is operators who can set policy for protocols that already
+     implement opportunistic security.
+   <t>
   </abstract>
 
  </front>
