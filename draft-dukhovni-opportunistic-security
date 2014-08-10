@@ -187,9 +187,8 @@
      to remove barriers to the widespread use of encryption on the
      Internet.  The actual protection provided by opportunistic
      security depends on the advertised (in-band) or published
-     (out-of-band) capabilities of the communicating peers.  To
-     make this more precise it is important to point out that the
-     granularity of the applicable protection level is rather coarse.
+     (out-of-band) capabilities of the communicating peers.  The
+     granularity of the applicable protection level for OS is rather coarse.
      It is anticipated that in most cases, the protection level is
      a choice between one of the following:
    </t>
@@ -210,19 +209,23 @@
    </t>
 
    <t>
-     Note that opportunistic security is not limited to unauthenticated
+     Note that the opportunistic security design pattern is not limited to unauthenticated
      encryption.  Opportunistic security protocols should, provide
      a means to enforce authentication for those peers for which
      authentication is required by policy or can be expected to
      succeed based on information provided by the peer.  Enforcement
      of authentication in an opportunistic protocol is not a
-     contradiction.  Opportunistic security does not start with an
+     contradiction.
+   </t>
+
+   <t>
+     Opportunistic security does not start with an
      overly optimistic view of peer capabilities only to be
      "disappointed" and settle for less when the peer fails to live
-     up to expectations.  Rather, opportunistic security starts
+     up to expectations.  Rather, the opportunistic security design pattern starts
      with a pessimistic view of the baseline capabilities of all
      peers, and is "pleasantly surprised" to learn that some peers
-     can be expected to do more.  Thus opportunistic security aims
+     can be expected to do more.  Opportunistic security aims
      to do better than might be expected, rather than worse than
      might be hoped.
    </t>
@@ -246,28 +249,26 @@
   </t>
 
   <t>
-     Though authentication failure MAY be a reason to abort a
-     connection to a peer that is expected to be authenticated, it
+     In the opportunistic security design pattern, authentication failure MAY be a reason to abort a
+     connection to a peer that is expected to be authenticated.  However, such a failure
      MUST NOT then lead to communication in cleartext when encryption
      is an option.  Some Message Transfer Agents (MTAs, <xref
      target="RFC5598"/> Section 4.3.2) employing STARTTLS (<xref
      target="RFC3207"/>) have been observed to abort TLS (<xref
      target="RFC5246"/>) transmission when the receiving MTA fails
      authentication, only to immediately deliver the same message
-     over a cleartext connection.  This design blunder MUST be
-     avoided.
+     over a cleartext connection.  The OS design pattern always prevents this obvious problem.
    </t>
 
    <t>
-     More fine-grained security policy such as the selection of a
-     particular encryption algorithm or key agreement protocol is
-     left to the underlying crypto protocols such as Transport Layer
-     Security (TLS <xref target="RFC5246"/>).  Note, TLS itself
-     cannot be said to either implement or lack opportunistic
-     security, that depends on how it is used, it is a flexible
-     building block for higher-level protocols which may be based
-     on the OS design pattern.  An OS protocol may demand more
-     stringent security from the underlying crypto protocols when
+     More fine-grained security policy, such as the selection of a
+     particular encryption algorithm or key agreement protocol, is
+     left to the underlying cryptographic protocols such as
+     TLS, IPsec, and SSH.  These protocols themselves
+     cannot be said to implement opportunistic
+     security or to lack it; the all allow implementation and operational
+     policies that can be based on the OS design pattern.  An OS protocol may demand more
+     stringent security from the underlying cryptographic protocols when
      authenticated encryption is required than when only unauthenticated
      encryption is employed.
    </t>
