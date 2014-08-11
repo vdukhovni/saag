@@ -290,6 +290,15 @@
    <t>
     <list style="hanging">
 
+<!--
+I would very much like to see the order of this section changed to:
+Encrypt by default
+No misrepresentation of security
+Coexist with explicit policy
+Prioritize not getting in the way
+Maximize security peer by peer
+-->
+
      <t hangText="Coexist with explicit policy:">Explicit security
      policy preempts opportunistic behavior.  Administrators or
      users may elect to disable opportunistic security for some or
@@ -318,10 +327,9 @@
      (i.e., neither publishes or negotiates security services that
      are not available or don't function correctly).  </t>
 
-     <t hangText="Maximize security peer by peer:"> Subject to the
-     above interoperability goal, opportunistic security strives
+     <t hangText="Maximize security peer by peer:"> Opportunistic security strives
      to maximize security based on the capabilities of the peers.
-     For some opportunistic security protocols the maximal protection
+     For some opportunistic security protocols, the maximal protection
      possible may be just unauthenticated encryption to address
      passive monitoring.  For others, protection against active
      attacks may be an option.  Opportunistic security protocols
@@ -348,10 +356,9 @@
      of long-term keys.  </t>
 
      <t hangText="No misrepresentation of security:"> Unauthenticated
-     communication or use of authentication that is vulnerable to
-     MiTM attacks is not represented as strong security.  Where
-     protection against active attacks is required, unauthenticated
-     opportunistic security is not a substitute.  </t>
+     encrypted communication or use of authentication that is vulnerable to
+     MiTM attacks MUST NOT be represented to users the same way that
+     authenticated encryption is. </t>
     </list>
    </t>
 
@@ -374,9 +381,9 @@
       Though opportunistic security potentially supports transmission in
       cleartext, unauthenticated encryption, or other protection levels
       short of the strongest potentially applicable, the effective
-      security for users is increased, not reduced.  Provided strong
+      security for users is always increased and never reduced.  If
       security is not required by policy or securely negotiated, nothing
-      is lost by allowing weaker protection levels, indeed opportunistic
+      is lost by allowing weaker protection levels.  Opportunistic
       security is strictly stronger than the alternative of providing no
       security services when maximal security is not applicable.
     </t>
