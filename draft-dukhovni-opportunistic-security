@@ -378,14 +378,29 @@
   <section title="Security Considerations" anchor="sec_security">
 
     <t>
-      Though opportunistic security potentially supports transmission in
-      cleartext, unauthenticated encryption, or other protection levels
-      short of the strongest potentially applicable, the effective
-      security for users is always increased and never reduced.  If
-      security is not required by policy or securely negotiated, nothing
-      is lost by allowing weaker protection levels.  Opportunistic
-      security is strictly stronger than the alternative of providing no
-      security services when maximal security is not applicable.
+      Though opportunistic security potentially supports transmission
+      in cleartext, unauthenticated encryption, or other cryptographic
+      protection levels short of the strongest potentially applicable,
+      the effective security for users is always increased and never
+      reduced.  If a cryptographic capability is neither required
+      by policy nor advertised by the peer, nothing is lost by going
+      without.  Opportunistic security is strictly stronger than
+      the alternative of providing no security services when maximal
+      security is not applicable.
+    </t>
+
+    <t>
+      Opportunistic security coexists with existing mandatory policy,
+      and does not require reducing security policy to the lowest
+      common denominator.  Mandatory policy trumps opportunistic
+      policy based on peer capabilities.  However, mandatory policy
+      can be counter-productive when it expects more than most peers
+      can in fact deliver.  Mandatory policy should be used with
+      care, lest users find it too restrictive and act to disable
+      security entirely.  Opportunistic security aims to enable
+      incremental rollout of cryptographic protection against both
+      passive and active attacks as appropriate software and
+      configurations are deployed one system at a time.
     </t>
 
   </section>
@@ -394,7 +409,9 @@
 
     <t>
       I would like to thank Steve Kent.  Some of the text in this
-      document is based on his earlier draft.
+      document is based on his earlier draft.  I would also like
+      to thank Nico Williams, Paul Hoffman, Paul Wouters and Stephen
+      Farrell for their helpful suggestions and support.
     </t>
 
   </section><!-- Acknowledgements -->
