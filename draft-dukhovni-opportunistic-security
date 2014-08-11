@@ -5,6 +5,7 @@
   <!ENTITY rfc3207 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3207.xml">
   <!ENTITY rfc4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
   <!ENTITY rfc4949 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4949.xml">
+  <!ENTITY rfc5116 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5116.xml">
   <!ENTITY rfc5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
   <!ENTITY rfc5598 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5598.xml">
   <!ENTITY rfc6125 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6125.xml">
@@ -46,14 +47,12 @@
    </t>
 
    <t>
-     This document is aimed primarily at protocol designers who
-     want to make their protocols more resistant to Pervasive
-     Monitoring (PM, <xref target="RFC7258"/>).  Additionally, this
-     draft facilitates designs that make it possible to roll out
-     cryptographic protection against active attacks incrementally
-     as suitably capable systems are deployed.  Another audience
-     is operators who set policy for systems that can implement
-     opportunistic security.
+     This document is aimed primarily at protocol designers.  It
+     facilitates designs that are more resistant to passive wiretaps,
+     and designs in which cryptographic protection against active
+     attacks can be rolled out incrementally as suitably capable
+     systems are deployed.  Another audience is operators who set
+     policy for systems that can implement opportunistic security.
    </t>
 
   </abstract>
@@ -64,16 +63,18 @@
   <section title="Introduction">
 
    <t>
-     Encryption is easy, but key management is difficult.  No single
-     key management approach has seen universal adoption.  The Web
-     PKI key management system, which is based on broadly trusted
-     public certification authorities (CAs), has too many trusted
-     authorities and imposes burdens that not all peers are willing
-     to bear.  In addition, web PKI public CAs are not sufficient
-     to secure communications when the peer reference identifier
-     (Section 1.8 of <xref target="RFC6125"/>) is obtained indirectly
-     over an insecure channel, or when the communicating parties don't agree
-     on a trusted CA.
+     Encryption is easy, but key management is difficult.  For
+     example, the Public Key Infrastructure (PKI) used for the web
+     (often called the "Web PKI") is based on broadly trusted public
+     certification authorities (CAs).  The Web PKI has too many
+     fully trusted authorities and imposes burdens that not all
+     peers are willing to bear.  Web PKI public CAs are not always
+     sufficient to authenticate the peer system.  Web PKI authentication
+     is vulnerable to MiTM attacks when the peer reference identifier
+     (<xref target="RFC6125"/>) is obtained indirectly over an
+     insecure channel, perhaps via an MX or SRV lookup.  And with
+     so many certification authorities the communicating parties
+     don't always agree on a mutually trusted CA.
    </t>
 
    <t>
@@ -88,17 +89,17 @@
 
    <t>
      Historically, Internet security protocols have prioritized
-     comprehensive cryptographic protection against both passive and active
-     attacks.  Protection against active attacks requires authentication,
-     but the lack of a universal key management approach has created
-     a situation in which only a minority of peers can be authenticated.
-     When protocols only offer the options of an authenticated
-     secure channel or cleartext, most traffic is sent in the clear.
-     As a result, while communications traffic is sometimes strongly
-     protected, more typically it is not protected at all.  The
-     fact that most traffic is unencrypted makes
-     pervasive monitoring by  nation-stats easier by making
-     it cost-effective, or at least not cost-prohibitive; see <xref target="RFC7258"/>
+     comprehensive cryptographic protection against both passive
+     and active attacks.  Protection against active attacks requires
+     authentication, but the lack of a universal key management
+     approach has created a situation in which only a minority of
+     peers can be authenticated.  When protocols only offer the
+     options of an authenticated secure channel or cleartext, most
+     traffic is sent in the clear.  As a result, while communications
+     traffic is sometimes strongly protected, more typically it is
+     not protected at all.  The fact that most traffic is unencrypted
+     makes pervasive monitoring easier by making it cost-effective,
+     or at least not cost-prohibitive; see <xref target="RFC7258"/>
      for more detail.
    </t>
 
@@ -106,11 +107,11 @@
      If security protocols were designed to encrypt traffic whenever
      possible, bulk collection of communications traffic would be
      substantially less attractive.  Even if one is not concerned
-     about nation-state pervasive monitoring, passive wiretaps by
-     individual malicious actors or criminal organizations is still
-     a potential problem for individuals and organizations.  Using
-     the opportunistic security design makes passive attacks more
-     difficult for all these actors.
+     about pervasive monitoring, passive wiretaps by individual
+     malicious actors or criminal organizations are still a potential
+     problem for individuals and organizations.  Using the opportunistic
+     security design makes passive attacks more difficult for all
+     these actors.
    </t>
 
    <t>
@@ -130,8 +131,8 @@
 
    <t>
      The risk of active attacks should also not be ignored.  The
-     opportunistic security design pattern can operate at a range
-     of cryptographic protection levels, with encrypted transmission
+     opportunistic security design pattern features a range of
+     cryptographic protection levels, with encrypted transmission
      accessible to most if not all peers.  Even with opportunistic
      security, protection against active attacks is still employed
      where unconditionally required by policy or else determined
@@ -154,20 +155,12 @@
 
    <t>
      <list style="hanging">
-       <t hangText="Perfect Forward Secrecy (PFS):"> For a key
-       agreement protocol, the property that compromises long-term
-       keying material does not compromise session keys that were
-       previously derived from the long-term material.  (Definition
-       taken from <xref target="RFC4949"/>.) </t>
 
-       <t hangText="Man-in-the-Middle (MiTM) attack:"> A form of
-       active wiretapping attack in which the attacker intercepts
-       and selectively modifies communicated data to masquerade as
-       one or more of the entities involved in a communication
-       association.  (Definition taken from <xref target="RFC4949"/>).
-       Masquerading enables the MiTM to violate the confidentiality
-       and/or the integrity of communicated data passing through
-       it.  </t>
+       <t hangText="Perfect Forward Secrecy (PFS):"> As defined
+       in <xref target="RFC4949"/>.  </t>
+
+       <t hangText="Man-in-the-Middle (MiTM) attack:"> As defined
+       in <xref target="RFC4949"/>.  </t>
 
        <t hangText="Trust on First Use (TOFU):">In a protocol, TOFU
        typically consists of accepting an asserted identity, without
@@ -177,13 +170,18 @@
        attack did not succeed during the (vulnerable) initial
        communication or if the MiTM is not present for all subsequent
        communications.  The SSH protocol makes use of TOFU. The phrase
-       "leap of faith" (LoF) is sometimes used as a synonym.</t>
+       "leap of faith" (LoF) is sometimes used as a synonym.  </t>
 
        <t hangText="Unauthenticated Encryption:">Encryption using
-       a key agreement technique that does not authenticate the
+       a key agreement scheme that does not authenticate the
        identities of the peers.  In typical usage, this means that
        the initiator (client) has not verified the identity of the
-       target (server), making MiTM attacks possible.  </t>
+       target (server), making MiTM attacks possible.  Note that
+       unauthenticated encryption is not the opposite of Authenticated
+       Encryption with Associated Data (AEAD, <xref target="RFC5116"/>),
+       AEAD algorithms can be used with either authenticated or
+       unauthenticated peers.  </t>
+
      </list>
    </t>
 
@@ -194,37 +192,49 @@
    <t>
      Opportunistic Security is a protocol design pattern that aims
      to remove barriers to the widespread use of encryption on the
-     Internet.  The actual protection provided by opportunistic
-     security depends on the advertised (in-band) or published
-     (out-of-band) capabilities of the communicating peers.  The
-     granularity of the applicable protection level for OS is rather coarse.
-     It is anticipated that in most cases, the protection level is
-     a choice between one of the following:
+     Internet.  The opportunistic security design pattern involves
+     determining the security mechanisms to use, whether to enforce
+     their use, and how to handle errors with, or non-use of those
+     security mechanisms, based on advertised (in-band out-of-band)
+     capabilities of the specific communicating peers.  When the
+     peer capability advertisement matches reality, opportunistic
+     security is expected to not get in the way of communicating
+     with that peer.  Security services that "just work" are more
+     likely to be deployed and enabled by default.
    </t>
 
    <t>
-       <list style="symbols">
-	 <t>
-	   No encryption (cleartext), which protects against neither
-	   passive nor active attacks.
-	 </t> <t>
-	   Unauthenticated encryption, which protects only against
-	   passive attacks.
-	 </t> <t>
-	   Authenticated encryption, which protects against both
-	   passive and active attacks.
-	 </t>
-       </list>
+     The determination of which security mechanisms to use can vary
+     from case to case when the OS design pattern is used with
+     different protocols.  The cryptographic protection level one
+     gets from the OS pattern will depend on the protocol making
+     use of the pattern. In many cases, OS will result in negotiating
+     channels with one of the following security properties:
    </t>
 
    <t>
-     Note that the opportunistic security design pattern is not limited to unauthenticated
-     encryption.  Opportunistic security protocols should, provide
-     a means to enforce authentication for those peers for which
-     authentication is required by policy or can be expected to
-     succeed based on information provided by the peer.  Enforcement
-     of authentication in an opportunistic protocol is not a
-     contradiction.
+     <list style="symbols">
+
+      <t> No encryption (cleartext), which protects against neither
+      passive nor active attacks.  </t>
+
+      <t> Unauthenticated encryption, which protects only against
+      passive attacks.  </t>
+
+      <t> Authenticated encryption, which protects against both
+      passive and active attacks.  </t>
+
+     </list>
+   </t>
+
+   <t>
+     Note that the opportunistic security design pattern is not
+     limited to unauthenticated encryption.  Opportunistic security
+     protocols should, provide a means to enforce authentication
+     for those peers for which authentication is required by policy
+     or can be expected to succeed based on information provided
+     by the peer.  Enforcement of authentication in an opportunistic
+     protocol is not a contradiction.
    </t>
 
    <t>
@@ -246,17 +256,17 @@
      provides authenticated denial of existence, an MiTM attacker
      needs to compromise DNSSEC in order to suppress a peer's TLSA
      records.
-  </t>
+   </t>
 
-  <t>
-    Unless preempted by local or other policy, an opportunistic
-    security protocol first determines for a given peer whether
-    that peer supports authenticated encryption, unauthenticated
-    encryption or perhaps only cleartext.  The appropriate
-    communications security policy is then employed for each peer.
-  </t>
+   <t>
+     Unless preempted by local or other policy, an opportunistic
+     security protocol first determines for a given peer whether
+     that peer supports authenticated encryption, unauthenticated
+     encryption or perhaps only cleartext.  The appropriate
+     communications security policy is then employed for each peer.
+   </t>
 
-  <t>
+   <t>
      In the opportunistic security design pattern, authentication
      failure MAY be a reason to abort a connection to a peer that
      is expected to be authenticated.  However, such a failure MUST
@@ -266,8 +276,8 @@
      target="RFC3207"/>) have been observed to abort TLS (<xref
      target="RFC5246"/>) transmission when the receiving MTA fails
      authentication, only to immediately deliver the same message
-     over a cleartext connection.  The OS design pattern always
-     prevents this obvious problem.
+     over a cleartext connection.  The OS design pattern avoids
+     this obvious problem.
    </t>
 
    <t>
@@ -307,7 +317,7 @@
      capabilities advertised or published by the peer.  Alternatively,
      opportunistic security might be enabled only for specified peers,
      rather than by default.  Opportunistic security is not intended
-     to displace or preempt local policy.  However, it is expected that
+     to displace or preempt local policy.  However, it is likely that
      where static policy is in conflict with reality, opportunistic
      security will lead to better outcomes.  </t>
 
@@ -357,8 +367,9 @@
      of long-term keys.  </t>
 
      <t hangText="No misrepresentation of security:"> Unauthenticated
-     encrypted communication MUST not be misrepresented as communication
+     encrypted communication MUST NOT be misrepresented as communication
      over a secure channel.  </t>
+
     </list>
    </t>
 
@@ -366,11 +377,11 @@
      In summary, the opportunistic security design pattern encompasses
      protocol designs that remove barriers to the widespread use
      of encryption on the Internet.  The actual protection provided
-     by opportunistic security depends on the advertised (in-band)
-     or published (out-of-band) capabilities of the communicating
-     peers.  Opportunistic security MUST at least aim to encrypt
-     network traffic, while allowing fallback to cleartext with
-     peers that do not appear to be encryption capable.
+     by opportunistic security depends on the advertised (in-band
+     or out-of-band) capabilities of the communicating peers.
+     Opportunistic security MUST at least aim to encrypt network
+     traffic, while allowing fallback to cleartext with peers that
+     do not appear to be encryption capable.
    </t>
 
   </section>
@@ -381,26 +392,26 @@
       Though opportunistic security potentially supports transmission
       in cleartext, unauthenticated encryption, or other cryptographic
       protection levels short of the strongest potentially applicable,
-      the effective security for users is always increased and never
+      the effective security for peers is always increased and never
       reduced.  If a cryptographic capability is neither required
-      by policy nor advertised by the peer, nothing is lost by going
+      by policy nor supported by the peer, nothing is lost by going
       without.  Opportunistic security is strictly stronger than
       the alternative of providing no security services when maximal
       security is not applicable.
     </t>
 
     <t>
-      Opportunistic security coexists with existing mandatory policy,
-      and does not require reducing security policy to the lowest
-      common denominator.  Mandatory policy trumps opportunistic
-      policy based on peer capabilities.  However, mandatory policy
-      can be counter-productive when it expects more than most peers
-      can in fact deliver.  Mandatory policy should be used with
-      care, lest users find it too restrictive and act to disable
-      security entirely.  Opportunistic security aims to enable
-      incremental rollout of cryptographic protection against both
-      passive and active attacks as appropriate software and
-      configurations are deployed one system at a time.
+      Opportunistic security does not require reducing security
+      policy to the lowest common denominator.  Opportunistic
+      security coexists with and is preempted by any a-priori security
+      policy that is not based on advertised peer capabilities.
+      However, such a-priori policy can be counter-productive when
+      it expects more than most peers can in fact deliver.  A-priori
+      policy should be used with care, lest users find it too
+      restrictive and act to disable security entirely.  Opportunistic
+      security aims to enable incremental rollout of cryptographic
+      protection against both passive and active attacks as appropriate
+      software and configurations are deployed one system at a time.
     </t>
 
   </section>
@@ -424,6 +435,7 @@
    &rfc3207;
    &rfc4033;
    &rfc4949;
+   &rfc5116;
    &rfc5246;
    &rfc5598;
    &rfc6125;
