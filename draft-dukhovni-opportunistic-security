@@ -11,6 +11,7 @@
   <!ENTITY rfc6125 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6125.xml">
   <!ENTITY rfc6698 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6698.xml">
   <!ENTITY rfc7258 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7258.xml">
+  <!ENTITY I-D.ietf-dane-smtp-with-dane SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-dane-smtp-with-dane.xml">
 ]>
 
 <?rfc compact="yes" ?>
@@ -386,6 +387,49 @@
 
   </section>
 
+  <section title="Example: Opportunistic TLS in SMTP">
+
+   <t>
+     Many MTAs support the STARTTLS (<xref target="RFC3207"/>)
+     ESMTP extension, however STARTTLS support is not yet universal.
+     In the absence of local policy to the contrary, MTAs acting
+     as SMTP clients are generally willing to send email in
+     cleartext, but will employ TLS when the SMTP server's EHLO
+     response advertises STARTTLS support.  Since the EHLO response
+     is not cryptographically protected, this advertisement is
+     vulnerable to MiTM downgrade attacks.  Thus opportunistic
+     TLS based on STARTTLS support can only protect against passive
+     attacks, and MTAs do not generally require peer authentication.
+     Self-signed certificates are common on receiving MTAs, and
+     the server name is generally obtained via insecure MX lookups.
+   </t>
+
+   <t>
+     Therefore, MTAs that implement opportunistic TLS employ at
+     most unauthenticated encryption, or else deliver over a
+     cleartext channel.  However, recent reports from a number
+     of large providers suggest that the majority of SMTP email
+     transmission on the Internet is now encrypted.  And the trend
+     is toward increasing adoption.
+   </t>
+
+   <t>
+     Not only is the STARTTLS advertisement is vulnerable to active
+     attacks, but also at present some MTAs that advertise STARTTLS
+     exhibit various interoperability problems in their implementations.
+     As a result, it is common practice to fall back to cleartext
+     transmission not only when STARTTLS is not offered, but also
+     when the TLS handshake fails, or even when TLS fails during
+     message transmission.
+   </t>
+
+   <t>
+     Protection against active attacks for SMTP is proposed in
+     <xref target="I-D.ietf-dane-smtp-with-dane"/>.
+   </t>
+
+  </section>
+
   <section title="Security Considerations" anchor="sec_security">
 
     <t>
@@ -441,6 +485,7 @@
    &rfc6125;
    &rfc6698;
    &rfc7258;
+   &I-D.ietf-dane-smtp-with-dane;
   </references>
  </back>
 </rfc>
