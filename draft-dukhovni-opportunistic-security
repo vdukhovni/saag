@@ -89,17 +89,18 @@
    <t>
      Historically, Internet security protocols have prioritized
      comprehensive cryptographic protection against both passive
-     and active attacks.  Protection against active attacks requires
-     authentication, but the lack of a universal key management
-     approach has created a situation in which only a minority of
-     peers can be authenticated.  When protocols only offer the
-     options of an authenticated secure channel or cleartext, most
-     traffic is sent in the clear.  As a result, while communications
-     traffic is sometimes strongly protected, more typically it is
-     not protected at all.  The fact that most traffic is unencrypted
-     makes pervasive monitoring easier by making it cost-effective,
-     or at least not cost-prohibitive; see <xref target="RFC7258"/>
-     for more detail.
+     and active attacks over enabling systems with varied security
+     requirements to communicate with each other.  Protection against
+     active attacks requires authentication, but the lack of a
+     universal key management approach has created a situation in
+     which only a minority of peers can be authenticated.  When
+     protocols only offer the options of an authenticated secure
+     channel or cleartext, most traffic is sent in the clear.  As
+     a result, while communications traffic is sometimes strongly
+     protected, more typically it is not protected at all.  The
+     fact that most traffic is unencrypted makes pervasive monitoring
+     easier by making it cost-effective, or at least not cost-prohibitive;
+     see <xref target="RFC7258"/> for more detail.
    </t>
 
    <t>
@@ -134,8 +135,14 @@
      cryptographic protection levels, with encrypted transmission
      accessible to most if not all peers.  Even with opportunistic
      security, protection against active attacks is still employed
-     where unconditionally required by policy or else determined
-     to be applicable with a given peer.
+     where unconditionally required by local policy or else determined
+     to be applicable with a given peer.  Protocol designers are
+     encouraged to produce protocols that can securely determine
+     which peers support authentication, and can then establish
+     authenticated communication channels resistant to active attacks
+     with those peers.  However, opportunistically applied
+     authentication must avoid deployment roadblocks and needs to
+     be designed with care to "just work".
    </t>
 
   </section>
@@ -421,9 +428,9 @@
     <t>
       I would like to thank Steve Kent.  Some of the text in this
       document is based on his earlier draft.  I would also like
-      to thank Nico Williams, Paul Hoffman, Martin Thomson, Paul
-      Wouters and Stephen Farrell for their helpful suggestions and
-      support.
+      to thank Nico Williams, Paul Hoffman, Martin Thomson, Scott
+      Kitterman, Paul Wouters and Stephen Farrell for their helpful
+      suggestions and support.
     </t>
 
   </section><!-- Acknowledgements -->
