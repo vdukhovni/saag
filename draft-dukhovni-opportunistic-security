@@ -301,7 +301,7 @@
      rather than by default.  Opportunistic security is not intended
      to displace or preempt local policy.  </t>
 
-     <t hangText="Prioritize not getting in the way:"> The primary
+     <t hangText="Prioritize enabling communication:"> The primary
      goal of designs that feature opportunistic security is to
      enable communication and maximize deployment.  If a non-negligible
      number of potential peers are only capable of cleartext, then
@@ -309,11 +309,11 @@
      not possible.  If authentication is only possible for some
      peers, then it is acceptable to authenticate only those peers
      and not the rest.  Opportunistic security needs to be deployable
-     incrementally, with each peer deployed and configured independently
-     by its administrator or user.  Opportunistic security must not
-     get in the way of two peers communicating when neither advertises
-     or negotiates security services that are not available or don't
-     function correctly.  </t>
+     incrementally, with each peer configured independently by its
+     administrator or user.  Opportunistic security must not get
+     in the way of two peers communicating when neither advertises
+     or negotiates security services that are not in fact available
+     or that don't function correctly.  </t>
 
      <t hangText="Maximize security peer by peer:"> Opportunistic
      security strives to maximize security based on the capabilities
