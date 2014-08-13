@@ -505,6 +505,7 @@
 <p id="rfc.section.5.p.2">Therefore, MTAs that implement opportunistic TLS employ at most unauthenticated encryption, or else deliver over a cleartext channel.  However, recent reports from a number of large providers suggest that the majority of SMTP email transmission on the Internet is now encrypted.  And the trend is toward increasing adoption.  </p>
 <p id="rfc.section.5.p.3">Not only is the STARTTLS advertisement is vulnerable to active attacks, but also at present some MTAs that advertise STARTTLS exhibit various interoperability problems in their implementations.  As a result, it is common practice to fall back to cleartext transmission not only when STARTTLS is not offered, but also when the TLS handshake fails, or even when TLS fails during message transmission.  </p>
 <p id="rfc.section.5.p.4">Some MTAs employing STARTTLS (<a href="#RFC3207">[RFC3207]</a>) have been observed to abandon Transport Layer Security (TLS) <a href="#RFC5246">[RFC5246]</a> encrypted transmission when the receiving MTA fails authentication, only to immediately deliver the same message over a cleartext connection.  The OS design pattern avoids this obvious problem.  </p>
+<p id="rfc.section.5.p.5">Protection against active attacks for SMTP is proposed in <a href="#I-D.ietf-dane-smtp-with-dane">[I-D.ietf-dane-smtp-with-dane]</a>.  </p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#sec_security" id="sec_security">Security Considerations</a></h1>
 <p id="rfc.section.6.p.1">Though opportunistic security potentially supports transmission in cleartext, unauthenticated encryption, or other cryptographic protection levels short of the strongest potentially applicable, the effective security for peers is always increased and never reduced.  If a cryptographic capability is neither required by policy nor supported by the peer, nothing is lost by going without.  Opportunistic security is strictly stronger than the alternative of providing no security services when maximal security is not applicable.  </p>
 <p id="rfc.section.6.p.2">Opportunistic security does not require reducing security policy to the lowest common denominator.  Opportunistic security coexists with and is preempted by any a-priori security policy that is not based on advertised peer capabilities.  However, such a-priori policy can be counter-productive when it expects more than most peers can in fact deliver.  A-priori policy should be used with care, lest users find it too restrictive and act to disable security entirely.  Opportunistic security aims to enable incremental rollout of cryptographic protection against both passive and active attacks as appropriate software and configurations are deployed one system at a time.  </p>
@@ -513,6 +514,12 @@
 <h1 id="rfc.references"><a href="#rfc.references">8.</a> References</h1>
 <table>
   <tbody>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-dane-smtp-with-dane">[I-D.ietf-dane-smtp-with-dane]</b>
+      </td>
+      <td class="top"><a>Dukhovni, V.</a> and <a>W. Hardaker</a>, "<a href="http://tools.ietf.org/html/draft-ietf-dane-smtp-with-dane-11">SMTP security via opportunistic DANE TLS</a>", Internet-Draft draft-ietf-dane-smtp-with-dane-11, August 2014.</td>
+    </tr>
     <tr>
       <td class="reference">
         <b id="RFC3207">[RFC3207]</b>
