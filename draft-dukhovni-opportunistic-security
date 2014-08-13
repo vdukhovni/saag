@@ -10,6 +10,7 @@
   <!ENTITY rfc6125 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6125.xml">
   <!ENTITY rfc6698 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6698.xml">
   <!ENTITY rfc7258 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7258.xml">
+  <!ENTITY I-D.ietf-dane-smtp-with-dane SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-dane-smtp-with-dane.xml">
 ]>
 
 <?rfc compact="yes" ?>
@@ -417,6 +418,11 @@
      avoids this obvious problem.
    </t>
 
+   <t>
+     Protection against active attacks for SMTP is proposed in
+     <xref target="I-D.ietf-dane-smtp-with-dane"/>.
+   </t>
+
   </section>
 
   <section title="Security Considerations" anchor="sec_security">
@@ -474,6 +480,7 @@
    &rfc6125;
    &rfc6698;
    &rfc7258;
+   &I-D.ietf-dane-smtp-with-dane;
   </references>
  </back>
 </rfc>
