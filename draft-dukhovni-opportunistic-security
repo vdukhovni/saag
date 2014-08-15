@@ -40,21 +40,22 @@
      design pattern.  Protocol designs based on OS depart from the
      established practice of employing cryptographic protection
      against both passive and active attacks, or no protection at
-     all.  OS protocols tailor the minimum required channel
-     security to the capabilities of the peer systems.  As a result,
-     at least some cryptographic protection should be provided most
-     of the time.  For example, the majority of Internet SMTP traffic
-     is now opportunistically encrypted.
+     all.  As a result, with OS at least some cryptographic protection
+     should be provided most of the time.  For example, the majority
+     of Internet SMTP traffic is now opportunistically encrypted.
+     OS designs remove barriers to the widespread use of encryption
+     on the Internet.  The actual protection provided by opportunistic
+     security depends on the advertised security capabilities of
+     the communicating peers.
    </t>
 
    <t>
-     This document is aimed primarily at protocol designers.  It
-     promotes designs in which cryptographic protection against
-     both passive and active attacks works without creating barriers
-     to communication and can be rolled out incrementally as suitably
-     capable systems are deployed.  This document is also aimed at
-     operators who set policy for systems that can make use of
-     opportunistic security.
+     This document promotes designs in which cryptographic protection
+     against both passive and active attacks can be rolled out
+     incrementally as new systems are deployed, without creating
+     barriers to communication.  This document should also to be
+     useful to operators who set policy for systems that can make
+     use of opportunistic security.
    </t>
 
   </abstract>
@@ -68,16 +69,18 @@
      Historically, Internet security protocols have emphasized
      comprehensive "all or nothing" cryptographic protection against
      both passive and active attacks.  With each peer, such a
-     protocol either achieves comprehensive protection or else
-     communication fails.  The alternative has been to not employ
-     the security protocol with many peers and transmit in cleartext.
+     protocol achieves either full protection or else total failure
+     to communicate (hard fail).  As a result, operators often
+     disable these security protocols at the first sign of trouble,
+     degrading all communications to cleartext transmission.
      Protection against active attacks requires authentication.
-     The ability to authenticate any peer on the Internet in turn
-     requires a ubiquitous interoperable key management system.
+     The ability to authenticate any potential peer on the Internet
+     requires a key management approach that works for all.
    </t>
 
    <t>
-     Key management is difficult.  For example, the Public Key
+     Designing and deploying a key management for the whole Internet
+     is for now an unsolved problem.  For example, the Public Key
      Infrastructure (PKI) used by the web (often called the "Web
      PKI") is based on broadly trusted public certification authorities
      (CAs).  The Web PKI has too many trusted authorities and imposes
@@ -85,36 +88,56 @@
      authentication is vulnerable to MiTM attacks when the peer
      reference identifier (<xref target="RFC6125"/>) is obtained
      indirectly over an insecure channel, perhaps via an MX or SRV
-     lookup.  And with so many certification authorities the
-     communicating parties don't always agree on a mutually trusted
-     CA.  The above issues are compounded by operational difficulties,
-     it is not, for example, infrequent for site operators to neglect
-     to perform timely renewal of expiring certificates.
+     lookup.  With so many certification authorities, which not
+     everyone is willing to trust, the communicating parties don't
+     always agree on a mutually trusted CA.  Without a mutually
+     trusted CA, authentication fails, leading to communications
+     failure.  The above issues are compounded by operational
+     difficulties.  For example, a common problem is for site
+     operators to forget to perform timely renewal of expiring
+     certificates.  In interactive applications, security warnings
+     are all too frequent, and end-users learn to actively ignore
+     security problems.
    </t>
 
    <t>
-     At this time, DNS Security (DNSSEC <xref target="RFC4033"/>)
-     is not sufficiently widely adopted to make DNS-Based Authentication
-     of Named Entities (DANE <xref target="RFC6698"/>) a viable
-     ubiquitous alternative to the Web PKI.  Trust on first use
-     (TOFU) key management models (such as saved SSH fingerprints
-     and various certificate pinning approaches) don't protect
-     initial contact, and require more user intervention when keys
-     change unexpectedly.
+     DNS Security (DNSSEC <xref target="RFC4033"/>) can be used to
+     leverage the global DNS infrastructure as a distributed
+     authentication system.  DNS-Based Authentication of Named
+     Entities (DANE <xref target="RFC6698"/>) provides the guidelines
+     and DNS records to use the DNS as an alternative to the Web
+     PKI.  However, at this time, DNSSEC is not sufficiently widely
+     adopted to allow DANE to play the role of an Internet-wide
+     any-to-any authentication system.  Therefore, protocols that
+     mandate authentication for all peers cannot generally do so
+     via DANE.  Opportunistic security protocols on the other hand,
+     can begin to use DANE immediately, without waiting for universal
+     adoption.
    </t>
 
    <t>
-     The lack of a ubiquitous key management system has created a
-     situation in which for many protocols only a minority of peers
-     can be authenticated.  There are many IETF security standards,
-     but in light of the above it is perhaps not surprising that
-     they do not appear to be as widely used as we would like.  When
-     protocols only offer the choice between an authenticated
-     encrypted channel or no protection, the result is that most
-     traffic is sent in cleartext.  The fact that most traffic is
-     not encrypted makes pervasive monitoring easier by making it
-     cost-effective, or at least not cost-prohibitive; see <xref
-     target="RFC7258"/> for more detail.
+     Other authentication mechanisms have been designed that do not
+     rely on trusted third parties.  The trust-on-first-use (TOFU)
+     authentication approach makes a leap of faith (LoF) by assuming
+     that unauthenticated public keys obtained on first contact
+     will likely be good enough to secure future communication.
+     TOFU is employed in SSH and in various certificate pinning
+     designs.  TOFU does not protect against an attacker who can
+     hijack the first contact communication and requires more care
+     from the end-user when systems update their cryptographic keys.
+     TOFU can make it difficult to distinguish routine system
+     administration from a malicious attack.
+   </t>
+
+   <t>
+     The lack of a global key management system means that for many
+     protocols only a minority of communications sessions can be
+     authenticated.  When protocols only offer the choice between
+     an authenticated encrypted channel or no protection, the result
+     is that most traffic is sent in cleartext.  The fact that most
+     traffic is not encrypted makes pervasive monitoring easier by
+     making it cost-effective, or at least not cost-prohibitive;
+     see <xref target="RFC7258"/> for more detail.
    </t>
 
    <t>
@@ -136,24 +159,21 @@
    </t>
 
    <t>
-     In order to make encryption ubiquitous, it must be possible
-     to opportunistically employ encryption with peers that support
-     it without always demanding authentication.  Against the
-     background of pervasive monitoring and other passive attacks,
-     if with a given peer only unauthenticated encryption (see
-     definition in <xref target="sec_terminology"/>) is possible,
-     then that is still preferable to cleartext.
+     To enable broader use of encryption, it must be possible to
+     opportunistically employ encryption with peers that support
+     it without always demanding authentication.  This defends
+     against pervasive monitoring and other passive attacks, as
+     even unauthenticated encryption (see definition in <xref
+     target="sec_terminology"/>) is preferable to cleartext.
    </t>
 
    <t>
      The opportunistic security design pattern involves stepping
      up from a baseline security policy compatible with all relevant
      peers to the most secure policy compatible with the capabilities
-     of a given peer.  With each peer that advertises the requisite
-     capabilities, protocols based on the opportunistic security
-     design pattern prefer unauthenticated encryption over cleartext,
-     and authentication over unauthenticated encryption (<xref
-     target="sec_terminology"/>).
+     of a given peer.  Note, this is rather different from setting
+     a high standard and attempting to determine (perhaps by asking
+     the user) whether an exception can be made.
    </t>
 
    <t>
@@ -168,8 +188,8 @@
    </t>
 
    <t>
-     Operators should of course be able specify explicit security
-     policies that override opportunistic security where appropriate.
+     Operators must be able specify explicit security policies that
+     override opportunistic security where appropriate.
    </t>
 
   </section>
@@ -179,21 +199,38 @@
    <t>
      <list style="hanging">
 
-       <t hangText="Perfect Forward Secrecy (PFS):"> As defined
-       in <xref target="RFC4949"/>.  </t>
+       <t hangText="Perfect Forward Secrecy (PFS):"> As defined in
+       <xref target="RFC4949"/>.  </t>
 
        <t hangText="Man-in-the-Middle (MiTM) attack:"> As defined
        in <xref target="RFC4949"/>.  </t>
 
        <t hangText="Trust on First Use (TOFU):">In a protocol, TOFU
-       typically consists of accepting an asserted identity, without
-       authenticating that assertion, and caching a key or credential
-       associated with the identity.  Subsequent communication using the
-       cached key/credential is secure against an MiTM attack, if such an
-       attack did not succeed during the (vulnerable) initial
-       communication or if the MiTM is not present for all subsequent
-       communications.  The SSH protocol makes use of TOFU. The phrase
-       "leap of faith" (LoF) is sometimes used as a synonym.  </t>
+       typically consists of accepting and storing an asserted
+       identity, without authenticating that assertion. Subsequent
+       communication using the cached key/credential is secure
+       against an MiTM attack, if such an attack did not succeed
+       during the (vulnerable) initial communication.  The SSH
+       protocol makes use of TOFU. The phrase "leap of faith" (LoF)
+       is sometimes used as a synonym.  </t>
+
+       <t hangText="Authenticated encryption:"> Encryption using a
+       session establishment method in which at least the initiator
+       (client) authenticates the identity of the acceptor (server).
+       This is required to protect against both passive and active
+       attacks.  Authenticated encryption can be one-sided, where
+       only the client authenticates the server.  One-sided
+       authentication of the server by the client is the most common
+       deployment used with Transport Layer Security (TLS, <xref
+       target="RFC5246"/>) for "secure browsing" in which client
+       authentication is typically performed at another layer in
+       the protocol.  Authenticated encryption can also be two-sided
+       or "mutual".  Mutual authentication plays a role in mitigating
+       active attacks when the client and server roles change in
+       the course of a single session.  Authenticated encryption
+       is not synonymous with use of AEAD <xref target="RFC5116"/>.
+       AEAD algorithms can be used with either authenticated or
+       unauthenticated peers. </t>
 
        <t hangText="Unauthenticated Encryption:">Encryption using
        a session establishment method that does not authenticate
@@ -201,11 +238,7 @@
        that the initiator (client) has not verified the identity
        of the target (server), making MiTM attacks possible.
        Unauthenticated encryption is not synonymous with non-use
-       of AEAD <xref target="RFC5116"/>.  AEAD algorithms can be
-       used with either authenticated or unauthenticated peers.  In
-       this document, the opposite of unauthenticated encryption,
-       in other words authenticated session establishment, is variously
-       called just authentication or authenticated encryption.  </t>
+       of AEAD <xref target="RFC5116"/>.  </t>
 
      </list>
    </t>
@@ -229,23 +262,24 @@
 
    <t>
      The determination of which security mechanisms to use can vary
-     from case to case when the OS design pattern is used with
-     different protocols.  The protection provided by the OS pattern
-     will depend on the protocol making use of the pattern.  In many
-     cases, OS will result in negotiating channels with one of the
-     following security properties:
+     from case to case and depends on the properties of the protocol
+     in which OS is applied.  In many cases, OS will result in
+     negotiating channels with one of the following security
+     properties:
 
      <list style="symbols">
       <t> No encryption (cleartext), which provides no protection
       against passive or active attacks.  </t>
 
-      <t> Unauthenticated encryption, which protects only against
+      <t> Unauthenticated encryption (definition in <xref
+      target="sec_terminology"/>), which protects only against
       passive attacks.  </t>
 
-      <t> Authenticated encryption, which protects against both
-      passive and active attacks.  </t>
-
+      <t> Authenticated encryption, (definition in <xref
+      target="sec_terminology"/>) which protects against both passive
+      and active attacks.  </t>
      </list>
+
    </t>
 
    <t>
@@ -253,27 +287,28 @@
      capabilities of a peer.  This might include whether that peer
      supports authenticated encryption, unauthenticated encryption
      or perhaps only cleartext.  After each peer has determined the
-     capabilities of the other, a compatible set of security services
-     can be employed.  Peer capabilities can be advertised out-of-band
-     or (negotiated) in-band.
+     capabilities of the other, the most preferred common security
+     capabilities are activated.  Peer capabilities can be advertised
+     out-of-band or (negotiated) in-band.
    </t>
 
    <t>
      An OS protocol may elect to apply more stringent security
-     settings with the underlying cryptographic mechanisms when
-     authenticated encryption is required than when only unauthenticated
-     encryption is employed.  For example, the minimum key lengths
-     for symmetric ciphers might be higher when protection against
-     active attacks is required.
+     settings for authenticated encryption than for unauthenticated
+     encryption.  For example, the set of enabled TLS cipher-suites
+     might be more restrictive when authentication is required.
    </t>
 
    <t>
      Security services that "just work" are more likely to be
-     deployed and enabled by default.  When the advertised capabilities
-     of peers match their actual capabilities, absent an actual
-     attack, an opportunistic security design must avoid risking
-     security-related communications failure, as a propensity for
-     failure when nothing is in fact wrong will hinder deployment.
+     deployed and enabled by default.  It is vital that the
+     capabilities advertised for an OS-compatible peer match the
+     deployed reality.  Otherwise, OS systems will detect such a
+     broken deployment as an active attack and communication may
+     fail.
+   </t>
+
+   <t>
      This might mean that peer capabilities are further filtered
      to consider only those capabilities that are sufficiently
      operationally reliable, and any that work only "some of the
@@ -296,34 +331,27 @@
      the peer via DANE, TOFU or other means.  With DANE, the
      advertisement that a peer supports authentication is
      downgrade-resistant.  What is "opportunistic" here is the
-     selective use of authentication for suitably capable peers;
-     much in the same way as unauthenticated encryption may be used
-     "opportunistically" with peers capable of more than cleartext.
+     selective use of authentication for certain peers; much in the
+     same way as unauthenticated encryption may be used "opportunistically"
+     with peers capable of more than cleartext.
    </t>
 
    <t>
-     Enforcement of authentication is not incompatible with the
-     opportunistic design pattern.  If an OS-enabled peer (A) makes
+     Enforcement of authentication is not incompatible with
+     opportunistic security.  If an OS-enabled peer (A) makes
      available authenticated key material, e.g., via DANE, to peer
      (B), then B should make use of this material to authenticate
-     A, if B is OS-enabled and supports DANE.  Enforcement of
-     authentication should only be applied where it is not
-     counter-productive.  Authentication should not be opportunistically
-     employed when it fails to protect against active attacks.  Such
-     as when the peer capability advertisement is not downgrade-resistant.
+     A, if B is OS-enabled and supports DANE.
    </t>
 
    <t>
      With a peer that does not advertise authentication support,
      to which transmission even in cleartext is permissible,
-     authentication checks may be automatically performed by the
-     underlying cryptographic service when setting up an encrypted
-     session.  In such a case authentication failure must not lead
-     to aborting the unauthenticated encrypted session and sending
-     in the clear instead.  When employing opportunistic unauthenticated
-     encryption, any enabled by default authentication checks need
-     to be disabled or configured to soft-fail, allowing the
-     unauthenticated encrypted session to proceed.
+     authentication (or the lack thereof) must never downgrade
+     encrypted communication to cleartext.  When employing opportunistic
+     unauthenticated encryption, any enabled by default authentication
+     checks need to be disabled or configured to soft-fail, allowing
+     the unauthenticated encrypted session to proceed.
    </t>
 
    <t>
@@ -354,34 +382,33 @@
      in such cases.  </t>
 
      <t hangText="Emphasize enabling communication:"> The primary
-     goal of designs that feature opportunistic security is to
-     enable communication and maximize deployment.  If potential
-     peers are only capable of cleartext, then it may be acceptable
-     to employ cleartext when encryption is not possible.  If
-     authentication is only possible for some peers, then it is
-     likely best to require authentication for only those peers and
-     not the rest.  Opportunistic security needs to be deployable
-     incrementally, with each peer configured independently by its
-     administrator or user.  Opportunistic security must not get
-     in the way of two peers communicating when neither advertises
-     or negotiates security services that are not in fact available
-     or that don't function correctly.  </t>
+     goal of opportunistic security is to enable secure communication
+     and maximize deployment.  If potential peers are only capable
+     of cleartext, then it may be acceptable to employ cleartext
+     when encryption is not possible.  If authentication is only
+     possible for some peers, then it is likely best to require
+     authentication for only those peers and not the rest.
+     Opportunistic security needs to be deployable incrementally,
+     with each peer configured independently by its administrator
+     or user.  Opportunistic security must not get in the way of
+     two peers communicating when neither advertises or negotiates
+     security services that are not in fact available or that don't
+     function correctly. </t>
 
      <t hangText="Maximize security peer by peer:"> Opportunistic
      security strives to maximize security based on the capabilities
      of the peers.  Communications traffic should generally be at
-     least encrypted.  Opportunistic security protocols may refuse to
-     communicate with peers for which higher security is expected,
-     but for some reason is not achieved.  The conditions under
-     which connections fail should generally be limited to operational
-     errors at one or the other peer or an active attack, so that
-     well-maintained systems rarely encounter problems in normal
-     use of opportunistic security.  </t>
+     least encrypted.  Opportunistic security protocols may refuse
+     to communicate with peers for which higher security is expected,
+     but for some reason is not achieved.  Advertised capabilities
+     must match reality to ensure that the only condition under
+     which there is a failure of communication is when one or both
+     peers are under an active attack.  </t>
 
-     <t hangText="Employ PFS:"> Whenever possible, opportunistic
-     security should employ Perfect Forward Secrecy (PFS) to make
-     recovery of previously sent keys and plaintext computationally
-     expensive even after disclosure of long-term keys.  </t>
+     <t hangText="Employ PFS:"> Opportunistic Security should employ
+     Perfect Forward Secrecy (PFS) to protect previously recorded
+     encrypted communication from decryption even after a compromise
+     of long-term keys. </t>
 
      <t hangText="No misrepresentation of security:"> Unauthenticated
      encrypted communication must not be misrepresented to users
@@ -392,25 +419,14 @@
     </list>
    </t>
 
-   <t>
-     In summary, the opportunistic security design pattern
-     encompasses protocol designs that remove barriers to the
-     widespread use of encryption on the Internet.  The actual
-     protection provided by opportunistic security depends on the
-     advertised capabilities of the communicating peers.
-     Opportunistic security aims to encrypt all network traffic,
-     while allowing fallback to cleartext with peers that do not
-     appear to be encryption capable.
-   </t>
-
   </section>
 
   <section title="Example: Opportunistic TLS in SMTP">
 
    <t>
      Many Message Transfer Agents (MTAs, <xref target="RFC5598"/>)
-     support the STARTTLS (<xref target="RFC3207"/>) ESMTP extension,
-     however STARTTLS support is not yet universal.  In the absence
+     support the STARTTLS (<xref target="RFC3207"/>) ESMTP extension.
+     However, STARTTLS support is not universal.  In the absence
      of local policy to the contrary, MTAs acting as SMTP clients
      are generally willing to send email in cleartext, but will
      employ TLS when the SMTP server's EHLO response advertises
@@ -426,11 +442,11 @@
 
    <t>
      Therefore, MTAs that implement opportunistic TLS employ at
-     most unauthenticated encryption, or else deliver over a
-     cleartext channel.  However, recent reports from a number
-     of large providers suggest that the majority of SMTP email
-     transmission on the Internet is now encrypted.  And the trend
-     is toward increasing adoption.
+     most unauthenticated encryption, or else deliver over a cleartext
+     channel.  However, recent reports from a number of large
+     providers suggest that the majority of SMTP email transmission
+     on the Internet is now encrypted.  And the trend is toward
+     increasing adoption.
    </t>
 
    <t>
@@ -445,14 +461,14 @@
 
    <t>
      Some MTAs employing STARTTLS (<xref target="RFC3207"/>) have
-     been observed to abandon Transport Layer Security (TLS) <xref
-     target="RFC5246"/> encrypted transmission when the receiving
-     MTA fails authentication, only to immediately deliver the same
-     message over a cleartext connection.  This is a bug, not a
-     feature, the OS design pattern avoids unnecessary fallback to
-     cleartext.  Some MTAs have been observed to tolerate unverified
-     self-signed certificates, but not expired certificates, this and
-     similar implementation errors must be avoided.
+     been observed to abandon TLS encrypted transmission when the
+     receiving MTA fails authentication, only to immediately deliver
+     the same message over a cleartext connection.  This is a bug,
+     not a feature. The OS design pattern avoids unnecessary fallback
+     to cleartext.  Other MTAs have been observed to tolerate
+     unverified self-signed certificates, but not expired certificates,
+     again falling back to cleartext.  This and similar implementation
+     errors must be avoided.
    </t>
 
    <t>
