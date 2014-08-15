@@ -118,15 +118,16 @@
    <t>
      Other authentication mechanisms have been designed that do not
      rely on trusted third parties.  The trust-on-first-use (TOFU)
-     authentication approach makes a leap of faith (LoF) by assuming
-     that unauthenticated public keys obtained on first contact
-     will likely be good enough to secure future communication.
-     TOFU is employed in SSH and in various certificate pinning
-     designs.  TOFU does not protect against an attacker who can
-     hijack the first contact communication and requires more care
-     from the end-user when systems update their cryptographic keys.
-     TOFU can make it difficult to distinguish routine system
-     administration from a malicious attack.
+     authentication approach makes a leap of faith (LoF, <xref
+     target="RFC4949"/>) by assuming that unauthenticated public
+     keys obtained on first contact will likely be good enough to
+     secure future communication.  TOFU is employed in SSH and in
+     various certificate pinning designs.  TOFU does not protect
+     against an attacker who can hijack the first contact communication
+     and requires more care from the end-user when systems update
+     their cryptographic keys.  TOFU can make it difficult to
+     distinguish routine system administration from a malicious
+     attack.
    </t>
 
    <t>
@@ -211,8 +212,9 @@
        communication using the cached key/credential is secure
        against an MiTM attack, if such an attack did not succeed
        during the (vulnerable) initial communication.  The SSH
-       protocol makes use of TOFU. The phrase "leap of faith" (LoF)
-       is sometimes used as a synonym.  </t>
+       protocol makes use of TOFU. The phrase "leap of faith" (LoF,
+       <xref target="RFC4949"/>) is sometimes used as a synonym.
+       </t>
 
        <t hangText="Authenticated encryption:"> Encryption using a
        session establishment method in which at least the initiator
