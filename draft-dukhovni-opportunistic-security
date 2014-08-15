@@ -428,27 +428,22 @@
    <t>
      Many Message Transfer Agents (MTAs, <xref target="RFC5598"/>)
      support the STARTTLS (<xref target="RFC3207"/>) ESMTP extension.
-     However, STARTTLS support is not universal.  In the absence
-     of local policy to the contrary, MTAs acting as SMTP clients
-     are generally willing to send email in cleartext, but will
-     employ TLS when the SMTP server's EHLO response advertises
-     STARTTLS support.  Since the EHLO response is not cryptographically
-     protected, this advertisement is vulnerable to MiTM downgrade
-     attacks.  Thus opportunistic TLS based on STARTTLS support can
-     only protect against passive attacks, and MTAs do not generally
-     require peer authentication.  MTAs acting as an SMTP client
-     typically obtain server names via a insecure MX lookups, and
-     self-signed certificates are common on MTAs acting as SMTP
-     servers.
+     MTAs acting as SMTP clients are generally willing to send email
+     without TLS (and therefore without encryption), but will employ
+     TLS (and therefore encryption) when the SMTP server announces
+     STARTTLS support.  Since the initial ESMTP negotiation is not
+     cryptographically protected, the STARTTLS advertisement is
+     vulnerable to MiTM downgrade attacks.  Further, MTAs do not
+     generally require peer authentication.  Thus opportunistic TLS
+     for SMTP only protects against passive attacks.
    </t>
 
    <t>
-     Therefore, MTAs that implement opportunistic TLS employ at
-     most unauthenticated encryption, or else deliver over a cleartext
-     channel.  However, recent reports from a number of large
-     providers suggest that the majority of SMTP email transmission
-     on the Internet is now encrypted.  And the trend is toward
-     increasing adoption.
+     Therefore, MTAs that implement opportunistic TLS either employ
+     unauthenticated encryption or deliver over a cleartext channel.
+     Recent reports from a number of large providers suggest that
+     the majority of SMTP email transmission on the Internet is now
+     encrypted, and the trend is toward increasing adoption.
    </t>
 
    <t>
@@ -458,19 +453,21 @@
      As a result, it is common practice to fall back to cleartext
      transmission not only when STARTTLS is not offered, but also
      when the TLS handshake fails, or even when TLS fails during
-     message transmission.
+     message transmission.  This is a reasonable trade-off, since
+     STARTTLS protects only against passive attacks, and absent an
+     active attack TLS failures are simply interoperability problems.
    </t>
 
    <t>
-     Some MTAs employing STARTTLS (<xref target="RFC3207"/>) have
-     been observed to abandon TLS encrypted transmission when the
-     receiving MTA fails authentication, only to immediately deliver
-     the same message over a cleartext connection.  This is a bug,
-     not a feature. The OS design pattern avoids unnecessary fallback
-     to cleartext.  Other MTAs have been observed to tolerate
-     unverified self-signed certificates, but not expired certificates,
-     again falling back to cleartext.  This and similar implementation
-     errors must be avoided.
+     Some MTAs employing STARTTLS (<xref target="RFC3207"/>) abandon
+     the TLS handshake when the server MTA fails authentication,
+     only to immediately deliver the same message over a cleartext
+     connection.  Other MTAs have been observed to tolerate unverified
+     self-signed certificates, but not expired certificates, again
+     falling back to cleartext.  These and similar implementation
+     errors must be avoided.  In either case, had these MTAs instead
+     used the OS design pattern, the communication would still have
+     been encrypted and therefore protected against passive attacks.
    </t>
 
    <t>
