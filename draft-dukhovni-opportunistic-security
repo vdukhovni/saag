@@ -504,15 +504,17 @@
  </middle>
 
  <back>
-  <references>
+  <references title="Normative References">
    &rfc3207;
    &rfc4033;
-   &rfc4949;
    &rfc5116;
    &rfc5246;
-   &rfc5598;
    &rfc6125;
    &rfc6698;
+  </references>
+  <references title="Informative References">
+   &rfc4949;
+   &rfc5598;
    &rfc7258;
    &I-D.ietf-dane-smtp-with-dane;
   </references>
