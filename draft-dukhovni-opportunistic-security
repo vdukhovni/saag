@@ -53,9 +53,7 @@
      This document promotes designs in which cryptographic protection
      against both passive and active attacks can be rolled out
      incrementally as new systems are deployed, without creating
-     barriers to communication.  This document should also to be
-     useful to operators who set policy for systems that can make
-     use of opportunistic security.
+     barriers to communication.
    </t>
 
   </abstract>
