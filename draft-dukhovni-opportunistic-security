@@ -139,7 +139,7 @@
 
    <t>
      To reach broad adoption, it must be possible to roll out support
-     for unauthenticated encryption or authentication incrementally.
+     for unauthenticated encrypted communication or authenticated encrypted communication incrementally.
      Incremental rollout on the scale of the Internet means that
      for some considerable time security capabilities vary from
      peer to peer, and therefore protection against passive and
@@ -160,7 +160,7 @@
      opportunistically employ encryption with peers that support
      it without always demanding authentication.  This defends
      against pervasive monitoring and other passive attacks, as
-     even unauthenticated encryption (see definition in <xref
+     even unauthenticated encrypted communication (see definition in <xref
      target="sec_terminology"/>) is preferable to cleartext.
    </t>
 
@@ -212,30 +212,30 @@
        <xref target="RFC4949"/>) is sometimes used as a synonym.
        </t>
 
-       <t hangText="Authenticated encryption:"> Encryption using a
+       <t hangText="Authenticated encrypted communication:"> Encrypted communication using a
        session establishment method in which at least the initiator
        (client) authenticates the identity of the acceptor (server).
        This is required to protect against both passive and active
-       attacks.  Authenticated encryption can be one-sided, where
+       attacks.  Authentication can be one-sided, where
        only the client authenticates the server.  One-sided
        authentication of the server by the client is the most common
        deployment used with Transport Layer Security (TLS, <xref
        target="RFC5246"/>) for "secure browsing" in which client
        authentication is typically performed at another layer in
-       the protocol.  Authenticated encryption can also be two-sided
+       the protocol.  Authentication can also be two-sided
        or "mutual".  Mutual authentication plays a role in mitigating
        active attacks when the client and server roles change in
-       the course of a single session.  Authenticated encryption
+       the course of a single session.  Authenticated encrypted comminication
        is not synonymous with use of AEAD <xref target="RFC5116"/>.
        AEAD algorithms can be used with either authenticated or
        unauthenticated peers. </t>
 
-       <t hangText="Unauthenticated Encryption:">Encryption using
+       <t hangText="Unauthenticated encrypted communication:">Encrypted communication using
        a session establishment method that does not authenticate
        the identities of the peers.  In typical usage, this means
        that the initiator (client) has not verified the identity
        of the target (server), making MiTM attacks possible.
-       Unauthenticated encryption is not synonymous with non-use
+       Unauthenticated encrypted communication is not synonymous with non-use
        of AEAD <xref target="RFC5116"/>.  </t>
 
      </list>
@@ -250,7 +250,7 @@
      to remove barriers to the widespread use of encryption on the
      Internet.  A related goal is broader adoption of protection
      against active attacks, by enabling incremental deployment of
-     authenticated encryption.
+     authenticated encrypted communication.
    </t>
 
    <t>
@@ -269,13 +269,11 @@
       <t> No encryption (cleartext), which provides no protection
       against passive or active attacks.  </t>
 
-      <t> Unauthenticated encryption (definition in <xref
-      target="sec_terminology"/>), which protects only against
+      <t> Encryption without authentication, which protects only against
       passive attacks.  </t>
 
-      <t> Authenticated encryption, (definition in <xref
-      target="sec_terminology"/>) which protects against both passive
-      and active attacks.  </t>
+      <t> Encryption with peer authentication, which protects against
+      both passive and active attacks.  </t>
      </list>
 
    </t>
@@ -283,7 +281,7 @@
    <t>
      An opportunistic security protocol first determines the
      capabilities of a peer.  This might include whether that peer
-     supports authenticated encryption, unauthenticated encryption
+     supports authentication, unauthenticated encrypted communication
      or perhaps only cleartext.  After each peer has determined the
      capabilities of the other, the most preferred common security
      capabilities are activated.  Peer capabilities can be advertised
@@ -292,9 +290,9 @@
 
    <t>
      An OS protocol may elect to apply more stringent security
-     settings for authenticated encryption than for unauthenticated
-     encryption.  For example, the set of enabled TLS cipher-suites
-     might be more restrictive when authentication is required.
+     settings when the session is authenticated.
+     For example, the set of enabled TLS cipher-suites
+     might be more restrictive when authentication is employed.
    </t>
 
    <t>
@@ -330,14 +328,14 @@
      advertisement that a peer supports authentication is
      downgrade-resistant.  What is "opportunistic" here is the
      selective use of authentication for certain peers; much in the
-     same way as unauthenticated encryption may be used "opportunistically"
+     same way as unauthenticated encrypted communication may be used "opportunistically"
      with peers capable of more than cleartext.
    </t>
 
    <t>
      Enforcement of authentication is not incompatible with
      opportunistic security.  If an OS-enabled peer (A) makes
-     available authenticated key material, e.g., via DANE, to peer
+     available authentication key material, e.g., via DANE, to peer
      (B), then B should make use of this material to authenticate
      A, if B is OS-enabled and supports DANE.
    </t>
@@ -346,10 +344,10 @@
      With a peer that does not advertise authentication support,
      to which transmission even in cleartext is permissible,
      authentication (or the lack thereof) must never downgrade
-     encrypted communication to cleartext.  When employing opportunistic
-     unauthenticated encryption, any enabled by default authentication
+     encrypted communication to cleartext.  When establishing a
+     session with such a peer, any enabled by default authentication
      checks need to be disabled or configured to soft-fail, allowing
-     the unauthenticated encrypted session to proceed.
+     establishment of an unauthenticated encrypted session to succeed.
    </t>
 
    <t>
@@ -436,7 +434,7 @@
 
    <t>
      Therefore, MTAs that implement opportunistic TLS either employ
-     unauthenticated encryption or deliver over a cleartext channel.
+     unauthenticated encrypted communication or deliver over a cleartext channel.
      Recent reports from a number of large providers suggest that
      the majority of SMTP email transmission on the Internet is now
      encrypted, and the trend is toward increasing adoption.
@@ -479,7 +477,7 @@
 
     <t>
       Though opportunistic security potentially supports transmission
-      in cleartext, unauthenticated encryption, or other cryptographic
+      in cleartext, unauthenticated encrypted communication, or other cryptographic
       protection levels short of the strongest potentially applicable,
       the effective security for peers is not reduced.  If a
       cryptographic capability is neither required by policy nor
