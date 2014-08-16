@@ -41,19 +41,17 @@
      established practice of employing cryptographic protection
      against both passive and active attacks, or no protection at
      all.  As a result, with OS at least some cryptographic protection
-     should be provided most of the time.  For example, the majority
-     of Internet SMTP traffic is now opportunistically encrypted.
-     OS designs remove barriers to the widespread use of encryption
-     on the Internet.  The actual protection provided by opportunistic
-     security depends on the advertised security capabilities of
-     the communicating peers.
+     should be provided most of the time.  OS designs remove barriers
+     to the widespread use of encryption on the Internet.  The
+     actual protection provided by opportunistic security depends
+     on the advertised security capabilities of the communicating
+     peers.
    </t>
 
    <t>
      This document promotes designs in which cryptographic protection
-     against both passive and active attacks can be rolled out
-     incrementally as new systems are deployed, without creating
-     barriers to communication.
+     can be rolled out incrementally as new systems are deployed,
+     without creating barriers to communication.
    </t>
 
   </abstract>
@@ -77,7 +75,7 @@
    </t>
 
    <t>
-     Designing and deploying a key management for the whole Internet
+     Designing and deploying a key management system for the whole Internet
      is for now an unsolved problem.  For example, the Public Key
      Infrastructure (PKI) used by the web (often called the "Web
      PKI") is based on broadly trusted public certification authorities
