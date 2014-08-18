@@ -233,29 +233,32 @@
        <xref target="RFC4949"/>) is sometimes used as a synonym.
        </t>
 
-       <t hangText="Authenticated encryption:"> Encryption using a
-       session establishment method in which at least the initiator
-       (client) authenticates the identity of the acceptor (server).
-       This is required to protect against both passive and active
-       attacks.  Authenticated encryption can be one-sided, where
-       only the client authenticates the server.  One-sided
-       authentication of the server by the client is the most common
-       deployment used with Transport Layer Security (TLS, <xref
-       target="RFC5246"/>) for "secure browsing" in which client
-       authentication is typically performed at another layer in
-       the protocol.  Authenticated encryption can also be two-sided
-       or "mutual".  Mutual authentication plays a role in mitigating
+       <t hangText="Authenticated connection:"> A communication
+       session that has been established where at least one party
+       (the client, or initiator) has verified the identity claimed
+       by the other party (the server, or acceptor).  Authenticated
+       connections can be one-sided, where only the client verifies
+       the identity of the server, but may also be two-sided, or
+       "mutual", where the server additionally verifies the claimed
+       identity of the client.  One-sided authentication of the
+       server by the client is the most common deployment used with
+       Transport Layer Security (TLS, <xref target="RFC5246"/>) for
+       "secure browsing" in which client authentication is
+       typically performed at another layer in the protocol.
+       Mutual authentication plays a role in mitigating
        active attacks when the client and server roles change in
-       the course of a single session.  Authenticated encryption
-       is not synonymous with use of AEAD <xref target="RFC5116"/>.
+       the course of a single session.  </t>
+
+       <t hangText="Authenticated encryption:"> Encryption of data
+       on an authenticated connection.  Authenticated encryption
+       is not synonymous with use of AEAD <xref target="RFC5116"/>;
        AEAD algorithms can be used with either authenticated or
        unauthenticated peers. </t>
 
-       <t hangText="Unauthenticated Encryption:">Encryption using
-       a session establishment method that does not authenticate
-       the identities of the peers.  In typical usage, this means
-       that the initiator (client) has not verified the identity
-       of the target (server), making MiTM attacks possible.
+       <t hangText="Unauthenticated Encryption:">Encryption of data
+       on a connection which is not authenticated.  In typical usage,
+       this means that the initiator (client) has not verified the
+       identity of the target (server), making MiTM attacks possible.
        Unauthenticated encryption is not synonymous with non-use
        of AEAD <xref target="RFC5116"/>.  </t>
 
