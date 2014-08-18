@@ -38,14 +38,16 @@
    <t>
      This memo introduces the "Opportunistic Security" (OS) protocol
      design pattern.  Protocol designs based on OS depart from the
-     established practice of employing cryptographic protection
-     against both passive and active attacks, or no protection at
+     established practice of either employing strong cryptographic protection
+     capable of protecting against both passive and active attacks,
+     or no protection at
      all.  As a result, with OS at least some cryptographic protection
      should be provided most of the time.  For example, the majority
      of Internet SMTP traffic is now opportunistically encrypted.
-     OS designs remove barriers to the widespread use of encryption
+     OS designs remove barriers to the widespread use of security
+     mechanisms such as encryption
      on the Internet.  The actual protection provided by opportunistic
-     security depends on the advertised security capabilities of
+     security protocols depends on the advertised security capabilities of
      the communicating peers.
    </t>
 
@@ -53,7 +55,9 @@
      This document promotes designs in which cryptographic protection
      against both passive and active attacks can be rolled out
      incrementally as new systems are deployed, without creating
-     barriers to communication.
+     barriers to communication, with the goal of eventually being able to
+     raise the floor of permissible security mechanisms, once support
+     for them is sufficiently widespread.
    </t>
 
   </abstract>
