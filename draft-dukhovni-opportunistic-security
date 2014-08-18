@@ -291,7 +291,10 @@
      An opportunistic security protocol first determines the
      capabilities of a peer.  This might include whether that peer
      supports authenticated encryption, unauthenticated encryption
-     or perhaps only cleartext.  After each peer has determined the
+     or perhaps only cleartext; the mechanism(s) used by a protocol
+     implementation to determine the capabilities of a peer should
+     be specified at a per-protocol level, but may involve consulting
+     DANE records.  After each peer has determined the
      capabilities of the other, the most preferred common security
      capabilities are activated.  Peer capabilities can be advertised
      out-of-band or (negotiated) in-band.
