@@ -260,15 +260,16 @@
    </t>
 
    <t>
-     The opportunistic security design pattern supports multiple
-     protection levels, while seeking the best protection possible.
+     The opportunistic security design pattern supports individual
+     protocols defining multiple protection levels, while seeking
+     to obtain the best protection possible on a per-connection basis.
    </t>
 
    <t>
      The determination of which security mechanisms to use can vary
      from case to case and depends on the properties of the protocol
-     in which OS is applied.  In many cases, OS will result in
-     negotiating channels with one of the following security
+     in which OS is applied.  In many cases, OS protocols will
+     negotiate channels with one of the following security
      properties:
 
      <list style="symbols">
