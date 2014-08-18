@@ -69,9 +69,9 @@
 
    <t>
      Historically, Internet security protocols have emphasized
-     comprehensive "all or nothing" cryptographic protection against
-     both passive and active attacks.  With each peer, such a
-     protocol achieves either full protection or else total failure
+     comprehensive "all or nothing" cryptographic functionality.
+     This behavior will either provide full protection against
+     both passive and active attacks, or else total failure
      to communicate (hard fail).  As a result, operators often
      disable these security protocols at the first sign of trouble,
      degrading all communications to cleartext transmission.
@@ -146,7 +146,8 @@
 
    <t>
      To reach broad adoption, it must be possible to roll out support
-     for unauthenticated encryption or authentication incrementally.
+     for various security enhancing mechanisms, such as unauthenticated
+     encryption or authentication, in an incremental fashion.
      Incremental rollout on the scale of the Internet means that
      for some considerable time security capabilities will vary from
      peer to peer, and therefore protection against passive and
@@ -156,19 +157,26 @@
    <t>
      We will use the phrase "opportunistically employed" to mean
      that the use of a type of protection or a security mechanism
-     was tailored to the advertised capabilities of the peer.  Both
-     opportunistically employed encryption and opportunistically
-     employed authentication need to avoid deployment roadblocks
-     and need to be designed with care to "just work".
+     was tailored to the advertised capabilities of the peer.  Care
+     must be taken in the specification of how security mechanisms
+     are to be opportunistically used, in order to avoid deployment
+     roadblocks and ensure that such mechanisms will "just work" when
+     they are advertised.
    </t>
 
    <t>
-     To enable broader use of encryption, it must be possible to
+     Recent revelations have shown the presence of pervasive monitoring
+     of the internet, and led to a desire for the broader use of
+     encryption of internet communications.  In order to enable the
+     broader use of encryption, it must be possible to to opportunistically
+     employ encryption with peers that support
      opportunistically employ encryption with peers that support
-     it without always demanding authentication.  This defends
-     against pervasive monitoring and other passive attacks, as
-     even unauthenticated encryption (see definition in <xref
+     it, without also always demanding authentication of the remote peer.
+     A principle of opportunistic security is that even unauthenticated
+     encryption (see definition in <xref
      target="sec_terminology"/>) is preferable to cleartext.
+     Nonetheless, when authentication of the remote peer is determined
+     to be possible, it should be performed as well.
    </t>
 
    <t>
@@ -177,7 +185,11 @@
      peers to the most secure policy compatible with the capabilities
      of a given peer.  Note, this is rather different from setting
      a high standard and attempting to determine (perhaps by asking
-     the user) whether an exception can be made.
+     the user) whether an exception can be made.  Opportunistically
+     using additional security capabilities leads to incremental adoption
+     of those security mechanisms, which can eventually allow the
+     security baseline to be raised, once sufficiently broad adoption
+     has been attained.
    </t>
 
    <t>
@@ -188,12 +200,14 @@
      designers are encouraged to produce protocols that can securely
      determine which peers support authentication, and can then
      establish authenticated communication channels resistant to
-     active attacks with those peers.
-   </t>
-
-   <t>
-     Operators must be able specify explicit security policies that
-     override opportunistic security where appropriate.
+     active attacks with those peers.  Determination of whether a
+     peer supports authenticating the communications channel can be
+     done in many ways (this is only an incomplete listing): DANE
+     provides a route, and other PKIs might be used so as well;
+     in-band capabilities negotiation may be performed; and of course
+     there must always remain the ability for operators to manually
+     specify what security policies to use and which hosts are capable
+     of authenticating themselves.
    </t>
 
   </section>
