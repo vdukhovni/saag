@@ -254,10 +254,9 @@
 
    <t>
      Opportunistic Security is a protocol design pattern that aims
-     to remove barriers to the widespread use of encryption on the
-     Internet.  A related goal is broader adoption of protection
-     against active attacks, by enabling incremental deployment of
-     authenticated encryption.
+     to remove barriers to the widespread use of security mechanisms
+     on the Internet.  The mechanisms expected to be most commonly
+     used are encryption of data and authentication of connections.
    </t>
 
    <t>
