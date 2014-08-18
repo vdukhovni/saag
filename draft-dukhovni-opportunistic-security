@@ -77,7 +77,8 @@
      degrading all communications to cleartext transmission.
      Protection against active attacks requires authentication.
      The ability to authenticate any potential peer on the Internet
-     requires a key management approach that works for all.
+     requires a key management approach that works for all hosts on
+     the internet.
    </t>
 
    <t>
@@ -85,12 +86,12 @@
      is for now an unsolved problem.  For example, the Public Key
      Infrastructure (PKI) used by the web (often called the "Web
      PKI") is based on broadly trusted public certification authorities
-     (CAs).  The Web PKI has too many trusted authorities and imposes
+     (CAs).  The Web PKI has many trusted authorities and imposes
      burdens that not all peers are willing to bear.  Web PKI
      authentication is vulnerable to MiTM attacks when the peer
      reference identifier (<xref target="RFC6125"/>) is obtained
      indirectly over an insecure channel, perhaps via an MX or SRV
-     lookup.  With so many certification authorities, which not
+     DNS lookup.  With so many certification authorities, which not
      everyone is willing to trust, the communicating parties don't
      always agree on a mutually trusted CA.  Without a mutually
      trusted CA, authentication fails, leading to communications
@@ -114,7 +115,7 @@
      mandate authentication for all peers cannot generally do so
      via DANE.  Opportunistic security protocols on the other hand,
      can begin to use DANE immediately, without waiting for universal
-     adoption.
+     adoption of DANE and DNSSEC.
    </t>
 
    <t>
@@ -147,7 +148,7 @@
      To reach broad adoption, it must be possible to roll out support
      for unauthenticated encryption or authentication incrementally.
      Incremental rollout on the scale of the Internet means that
-     for some considerable time security capabilities vary from
+     for some considerable time security capabilities will vary from
      peer to peer, and therefore protection against passive and
      active attacks needs to be applied selectively peer by peer.
    </t>
