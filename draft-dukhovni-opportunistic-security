@@ -318,73 +318,54 @@
    </t>
 
    <t>
-     An OS protocol may elect to apply more stringent security
-     settings for authenticated encryption than for unauthenticated
-     encryption.  For example, the set of enabled TLS cipher-suites
-     might be more restrictive when authentication is required.
+     Once the capabilities of the remote peer are known (along with
+     the capabilities of the local host), the OS protocol can
+     determine what security mechanism(s) to use.  In general, any
+     security mechanism that can be used and is expected to function
+     properly should be used (unless it is fully superseded by some
+     other security mechanism which can be used instead).
    </t>
 
    <t>
-     Security services that "just work" are more likely to be
-     deployed and enabled by default.  It is vital that the
-     capabilities advertised for an OS-compatible peer match the
-     deployed reality.  Otherwise, OS systems will detect such a
-     broken deployment as an active attack and communication may
-     fail.
+     Exceptions to the rule "if it can be used, use it" may be made
+     when there are existing deployments that do not provide
+     compliant implementations of a given mechanism, or in other
+     scenarios when the use of such a mechanism would be expected
+     to cause communication failures for a substantial portion of
+     connections.  To the extent possible, OS protocols should
+     "just work", in that they successfully pass data over the
+     protocol connection.
    </t>
 
    <t>
-     This might mean that peer capabilities are further filtered
-     to consider only those capabilities that are sufficiently
-     operationally reliable, and any that work only "some of the
-     time" are treated by an opportunistic security protocol as
-     "not present" or "undefined".
+     Authenticated connections are highly desirable, and encrypted
+     connections are also highly desirable.  In many cases, it
+     is possible to determine in a downgrade-resistant fashion that
+     a communications peer is capable of authenticating connections
+     to it, such as via DANE DNS records, existing TOFU identity
+     information, or manual configuration.  In such cases, OS protocols
+     should produce authenticated connections.  This use of authenticated
+     connections is "opportunistic", in that it is performed if
+     possible, on a per-connection basis.  Likewise, encryption should
+     be used opportunistically, if possible, on a per-connection basis.
+     If authentication cannot be used, unauthenticated encryption is
+     preferable to plaintext, but plaintext may still be an acceptable
+     fallback for backwards compatibility with already deployed systems.
    </t>
 
    <t>
-     Opportunistic security does not start with an over-estimate
-     of peer capabilities only to settle for lesser protection when
-     a peer fails to deliver.  Rather, opportunistic security sets
-     a minimum protection level expected of all peers, which is
-     raised for peers that are capable of more.
+     OS protocols are permitted to set a minimal "baseline" of security
+     mechanisms which must be used for such protocol connections.
+     This baseline may be raised to include more/stronger security
+     mechanisms in future revisions of the protocol, if their
+     opportunistic use has reached sufficient penetration that they
+     may be safely used for the vast majority of deployments.
    </t>
 
    <t>
-     Opportunistic security protocols should provide a means to
-     enforce authentication for those peers for which authentication
-     can be expected to succeed based on information advertised by
-     the peer via DANE, TOFU or other means.  With DANE, the
-     advertisement that a peer supports authentication is
-     downgrade-resistant.  What is "opportunistic" here is the
-     selective use of authentication for certain peers; much in the
-     same way as unauthenticated encryption may be used "opportunistically"
-     with peers capable of more than cleartext.
-   </t>
-
-   <t>
-     Enforcement of authentication is not incompatible with
-     opportunistic security.  If an OS-enabled peer (A) makes
-     available authenticated key material, e.g., via DANE, to peer
-     (B), then B should make use of this material to authenticate
-     A, if B is OS-enabled and supports DANE.
-   </t>
-
-   <t>
-     With a peer that does not advertise authentication support,
-     to which transmission even in cleartext is permissible,
-     authentication (or the lack thereof) must never downgrade
-     encrypted communication to cleartext.  When employing opportunistic
-     unauthenticated encryption, any enabled by default authentication
-     checks need to be disabled or configured to soft-fail, allowing
-     the unauthenticated encrypted session to proceed.
-   </t>
-
-   <t>
-     Cleartext support is for backwards compatibility with already
-     deployed systems.  Even when cleartext needs to be supported,
-     protocol designs based on opportunistic security prefer to
-     encrypt, employing cleartext only with peers that do not appear
-     to be encryption capable.
+     In OS protocols, the configuration parameters for a given security
+     mechanism (such as the set of enabled TLS cipher-suites) may depend
+     on the set of security mechanisms enabled for a given connection.
    </t>
 
   </section>
