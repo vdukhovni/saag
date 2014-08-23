@@ -39,19 +39,14 @@
 
    <t>
      This memo introduces the "Opportunistic Security" (OS) protocol
-     design guidelines.  Protocols that adhere to OS guidelines
+     design pattern.  Protocols based on the OS design pattern
      attempt to remove barriers to the widespread use of encryption
-     on the Internet.  OS protocols may offer additional security
-     services, e.g., integrity and authentication, if these services
-     are supported by all parties to a communication.  OS protocols
-     depart from the common practice of other Internet security
-     protocols, which commonly require cryptographic protection
-     against both passive and active attacks, or offer no protection
-     at all.  By contrast, OS protocols strive to offer encryption
-     even if authentication is not available.  This document
-     encourages protocol designs in which cryptographic protection
-     against both passive and active attacks can be deployed
-     incrementally, without creating barriers to communication.
+     on the Internet by striving to provide encryption even if
+     authentication is not available, but also authentication if
+     possible.  This document encourages protocol designs in which
+     cryptographic protection against both passive and active attacks
+     can be deployed incrementally, without creating barriers to
+     communication.
    </t>
 
   </abstract>
@@ -60,6 +55,65 @@
 
  <middle>
   <section title="Introduction">
+
+   <t>
+     Broadly speaking, Opportunistic Security (OS) is a pragmatic
+     risk management approach.  With Opportunistic Security, one
+     applies the tools at hand to mitigate those risks that can
+     reasonably be addressed, and accepts the rest.  Opportunistic
+     Security is related to "opportunity cost", which is the lost
+     benefit of actions not taken.  Accepting the risks one cannot
+     mitigate is essentially a choice to avoid opportunity cost
+     rather than avoid those risks.  A person who chooses to drive
+     a car to a store accepts the risk of a car accident, while
+     mitigating the opportunity cost of not buying food.  Opportunistic
+     security in this situation might involve wearing a seat-belt
+     and driving a car with airbags.
+   </t>
+
+   <t> <list style="hanging">
+     <t hangText="Definition:"> In the context of communications
+     security protocols, OS is defined as the use encryption when
+     possible, with authentication when possible.  In the above,
+     the phrase "when possible" means when support for the corresponding
+     capability is advertised by the peer. </t>
+   </list> </t>
+
+   <t>
+     Encryption is used to mitigate the risk of passive monitoring
+     attacks, while authentication is used to mitigate the risk of
+     active man-in-the-middle (MiTM) attacks.  For authentication
+     to protect against MiTM attacks, authentication capability
+     advertisements need to be over an existing authenticated
+     channel, that is itself resistant to MiTM attack.
+   </t>
+
+   <t>
+     To achieve widespread adoption, OS must support incremental
+     deployment.  Incremental deployment implies that security
+     capabilities will vary from peer to peer, perhaps for a very
+     long time.  OS protocols will attempt to establish encrypted
+     communication whenever both parties are capable of such,
+     authenticated if that is also possible.  Thus, use of an OS
+     protocol may yield communication that is authenticated and
+     encrypted, unauthenticated but encrypted, or cleartext.  This
+     last outcome will occur if not all parties to a communication
+     support encryption (or if an active attack makes it appear
+     that this is the case).
+   </t>
+
+   <t>
+     OS is not intended as a substitute for authenticated, encrypted
+     communication when such communication is already mandated by
+     policy or otherwise required to access a particular resource.
+     In essence, OS is employed when one might otherwise settle for
+     cleartext (or the minimum protection possible if the protocol
+     is always encrypted).  Therefore, OS protocols do not preempt
+     local security policies.  A security administrator may specify
+     security policies that override OS.  For example, a policy
+     might require authenticated, encrypted communication, in
+     contrast to the default OS security policy.
+   </t>
 
     <section title="A new perspective">
 
@@ -189,31 +243,6 @@
        encryption may be vulnerable to downgrade attacks, OS support
        for authenticated encrypted communication should be designed
        to be downgrade-resistant.
-     </t>
-
-     <t>
-       To achieve widespread adoption, OS must support incremental
-       deployment.  Incremental deployment implies that security
-       capabilities will vary from peer to peer, perhaps for a very
-       long time.  OS protocols will attempt to establish encrypted
-       communication whenever both parties are capable of such,
-       possibly authenticated if that is also possible.  Thus, use
-       of an OS protocol may yield communication that is unauthenticated
-       but encrypted, authenticated and encrypted, or cleartext.  This
-       last outcome will occur if not all parties to a communication
-       support encryption, (or if an active attack makes it appear
-       that this is the case).
-     </t>
-
-     <t>
-       OS is not intended as a substitute for authenticated, encrypted
-       communication when such communication is already mandated by
-       policy or otherwise required to access a particular resource.
-       Therefore, OS protocols do not preempt the use of local security
-       policies.  A security administrator may specify security
-       policies that override opportunistic security.  For example,
-       a policy might require authenticated, encrypted communication,
-       in contrast to the default OS security policy.
      </t>
 
      <t>
@@ -411,35 +440,6 @@
 
   </section>
 
-  <section title="Fallback">
-
-   <t>
-     OS protocol designs must work hard to minimize the possibility
-     of failure of negotiated security mechanisms.  When, despite
-     this, opportunistically selected security mechanisms fail, OS
-     protocols might need to employ "fallback", perhaps even with
-     user interaction.  Whether or how to fall back is left to
-     individual protocol designs.
-   </t>
-
-   <t>
-     When protection only against passive attacks is negotiated
-     over a channel vulnerable to active downgrade attacks, and the
-     use of encryption fails, a protocol might elect non-intrusive
-     fallback to cleartext.  An active attacker could equally have
-     suppressed the use of encryption during negotiation, so failure
-     to encrypt may be more often a symptom of an interoperability
-     problem than an active attack.  In such a situation occasional
-     fallback to cleartext may serve the greater good.  Even if
-     some traffic is sent in the clear, the alternative is to ask
-     the administrator or user to manually work-around such
-     interoperability problems.  If the incidence of such problems
-     is non-negligible, the user or administrator might find it
-     more expedient to just disable all security.
-   </t>
-
-  </section>
-
   <section title="Example: Opportunistic TLS in SMTP">
 
    <t>
@@ -498,6 +498,35 @@
      authenticated encrypted communication is enforced with peers
      for which appropriate DANE records are present.  For the
      remaining peers, "Opportunistic TLS"  is employed as before.
+   </t>
+
+  </section>
+
+  <section title="Operational Considerations">
+
+   <t>
+     OS protocol designs must work hard to minimize the possibility
+     of failure of negotiated security mechanisms.  When, despite
+     this, opportunistically selected security mechanisms fail, OS
+     protocols might need to employ "fallback", perhaps even with
+     user interaction.  Whether or how to fall back is left to
+     individual protocol designs.
+   </t>
+
+   <t>
+     When protection only against passive attacks is negotiated
+     over a channel vulnerable to active downgrade attacks, and the
+     use of encryption fails, a protocol might elect non-intrusive
+     fallback to cleartext.  An active attacker could equally have
+     suppressed the use of encryption during negotiation, so failure
+     to encrypt may be more often a symptom of an interoperability
+     problem than an active attack.  In such a situation occasional
+     fallback to cleartext may serve the greater good.  Even if
+     some traffic is sent in the clear, the alternative is to ask
+     the administrator or user to manually work-around such
+     interoperability problems.  If the incidence of such problems
+     is non-negligible, the user or administrator might find it
+     more expedient to just disable all security.
    </t>
 
   </section>
