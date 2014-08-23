@@ -76,7 +76,8 @@
      security protocols, OS is defined as the use encryption when
      possible, with authentication when possible.  In the above,
      the phrase "when possible" means when support for the corresponding
-     capability is advertised by the peer. </t>
+     capability is advertised by the peer, ideally in a downgrade
+     resistant manner. </t>
    </list> </t>
 
    <t>
@@ -118,52 +119,6 @@
      might require authenticated, encrypted communication, in
      contrast to the default OS security policy.
    </t>
-
-    <section title="A new perspective">
-
-     <t>
-       This document suggests a change of perspective.  With OS the
-       protocol designer no longer views comprehensive protection
-       against both passive and active attacks as the default, and
-       anything short of that as "degraded security" or a "fallback".
-       Rather, the new viewpoint is that absent specific knowledge
-       of peer capabilities (or applicable local policy) the default
-       protection is no protection, and anything more than that is
-       an improvement over that default.
-     </t>
-
-     <t>
-       This change of perspective is crucial to making progress on
-       getting cryptographic protection widely deployed.  Cleartext
-       is the new baseline, not comprehensive protection.  An OS
-       protocol is not falling back from comprehensive protection
-       when that is not supported by all peers, rather it employs
-       the maximum protection possible.  OS protocols work transparently
-       behind the scenes, without disrupting communication in the
-       absence of an attack.
-     </t>
-
-     <t>
-       When less than complete protection is negotiated, there is
-       no need to prompt the user with "your security may be degraded,
-       please click OK" dialogues.  The negotiated protection is
-       as good as can be expected.  Even if not comprehensive, it
-       is often better than the traditional alternative of employing
-       no protection, or communications failure.
-     </t>
-
-     <t>
-       In this document, the word "opportunistic" carries a positive
-       connotation.  Based on advertised peer capabilities, an OS
-       protocol uses as much protection as it can, with as many
-       peers as it can.  The adjective applies to the adaptive
-       choice of security mechanisms peer by peer.  Once that choice
-       is made for a given peer, Opportunistic Security looks rather
-       similar to other designs that happen to use the same set of
-       mechanisms.
-     </t>
-
-    </section>
 
     <section title="Background">
 
@@ -252,6 +207,52 @@
        target="RFC5321"/>, HTTP <xref target="RFC7230"/>, ...) have
        been deployed by some operators in a cleartext-only mode of
        operation.
+     </t>
+
+    </section>
+
+    <section title="A new perspective">
+
+     <t>
+       This document suggests a change of perspective.  With OS the
+       protocol designer no longer views comprehensive protection
+       against both passive and active attacks as the default, and
+       anything short of that as "degraded security" or a "fallback".
+       Rather, the new viewpoint is that absent specific knowledge
+       of peer capabilities (or applicable local policy) the default
+       protection is no protection, and anything more than that is
+       an improvement over that default.
+     </t>
+
+     <t>
+       This change of perspective is crucial to making progress on
+       getting cryptographic protection widely deployed.  Cleartext
+       is the new baseline, not comprehensive protection.  An OS
+       protocol is not falling back from comprehensive protection
+       when that is not supported by all peers, rather it employs
+       the maximum protection possible.  OS protocols work transparently
+       behind the scenes, without disrupting communication in the
+       absence of an attack.
+     </t>
+
+     <t>
+       When less than complete protection is negotiated, there is
+       no need to prompt the user with "your security may be degraded,
+       please click OK" dialogues.  The negotiated protection is
+       as good as can be expected.  Even if not comprehensive, it
+       is often better than the traditional alternative of employing
+       no protection, or communications failure.
+     </t>
+
+     <t>
+       In this document, the word "opportunistic" carries a positive
+       connotation.  Based on advertised peer capabilities, an OS
+       protocol uses as much protection as it can, with as many
+       peers as it can.  The adjective applies to the adaptive
+       choice of security mechanisms peer by peer.  Once that choice
+       is made for a given peer, Opportunistic Security looks rather
+       similar to other designs that happen to use the same set of
+       mechanisms.
      </t>
 
      <t>
