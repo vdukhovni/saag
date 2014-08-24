@@ -105,6 +105,17 @@
    </t>
 
    <t>
+     For a particular protocol or application, if and when all but
+     a negligible fraction of peers support encryption, the baseline
+     security can be raised from cleartext to always require
+     encryption.  Similarly, once support for authentication is
+     near-universal, the baseline can be raised to always require
+     authentication.  In this light OS is a long-term transition
+     strategy, from a largely cleartext Internet, to an Internet
+     in which OS is no longer required.
+   </t>
+
+   <t>
      OS is not intended as a substitute for authenticated, encrypted
      communication when such communication is already mandated by
      policy or is otherwise required to access a particular resource.
@@ -222,7 +233,7 @@
      </t>
 
      <t>
-       Cleartext is the new baseline, not comprehensive protection.
+       Cleartext is the default baseline, not comprehensive protection.
        An OS protocol is not falling back from comprehensive
        protection when that is not supported by all peers, rather
        it employs the maximum protection possible.  OS protocols
@@ -402,23 +413,22 @@
    </t>
 
    <t>
-     OS protocols should implement enforcement of authentication
-     for those peers for which authentication can be expected to
-     succeed based on out-of-band information advertised by the
-     peer.  Enforcement of authentication is not incompatible with
-     Opportunistic Security.  If an OS-enabled peer (A) makes
-     available authentication key material, e.g., via DANE, to peer
-     (B), then B should make use of this material to authenticate
-     A, if B is OS-enabled and supports DANE.  What is "opportunistic"
-     here is not DANE; it is the selective use of authentication with
-     peers that publish DANE records.
+     OS protocols should produce authenticated, encrypted communication
+     when authentication of the peer is "expected".  Here, "expected"
+     means a determination via a downgrade-resistant method that
+     authentication of that peer is expected to work.  Downgrade-resistant
+     methods include: validated DANE DNS records, existing TOFU
+     identity information, or manual configuration.  Such use of
+     authentication is "opportunistic", in that it is performed
+     when possible, on a per-session basis.
    </t>
 
    <t>
      When communicating with a peer that supports encryption but
      not authentication, any authentication checks enabled by default
      must be disabled or configured to soft-fail in order to avoid
-     unnecessary failure or downgrade to cleartext.
+     unnecessary communications failure or needless downgrade to
+     cleartext.
    </t>
 
    <t>
