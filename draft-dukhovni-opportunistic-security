@@ -56,24 +56,16 @@
      Broadly speaking, Opportunistic Security (OS) is a pragmatic
      risk management approach.  With Opportunistic Security, one
      applies the tools at hand to mitigate the risks that can
-     reasonably be addressed, and accepts the rest.  Opportunistic
-     Security is related to "opportunity cost", which is the lost
-     benefit of actions not taken.  Accepting the risks that one
-     cannot mitigate is essentially a choice to avoid opportunity
-     cost rather than avoid those risks.  A person who chooses to
-     drive a car to a store accepts the risk of a car accident,
-     while mitigating the opportunity cost of not buying food.
-     Opportunistic security in this situation might involve wearing
-     a seat-belt and driving a car with airbags.
+     reasonably be addressed, and accepts the rest.
    </t>
 
    <t> <list style="hanging">
      <t hangText="Definition:"> In the context of communications
-     security protocols, "Opportunistic Security" is defined as the
-     use of encryption when possible, with authentication when
-     possible.  In the above, the phrase "when possible" means when
-     support for the corresponding capability is advertised by the
-     peer, ideally in a downgrade-resistant manner.</t>
+     protocols, "Opportunistic Security" is defined as the use of
+     encryption when possible, with authentication when possible.
+     In the above, the phrase "when possible" means when support
+     for the corresponding capability is advertised by the peer,
+     ideally in a downgrade-resistant manner.</t>
    </list> </t>
 
    <t>
@@ -106,12 +98,10 @@
    <t>
      For a particular protocol or application, if and when all but
      a negligible fraction of peers support encryption, the baseline
-     security can be raised from cleartext to always require
+     security may be raised from cleartext to always require
      encryption.  Similarly, once support for authentication is
-     near-universal, the baseline can be raised to always require
-     authentication.  In this light, OS is a long-term transition
-     strategy, from a largely cleartext Internet, eventually to an
-     Internet in which OS is no longer required.
+     near-universal, the baseline may be raised to always require
+     authentication.
    </t>
 
    <t>
@@ -195,7 +185,7 @@
        The lack of a global key management system means that for
        many protocols, only a minority of communications sessions
        can be predictably authenticated.  When protocols only offer
-       a choice between authenticated and encrypted communication,
+       a choice between authenticated-and-encrypted communication,
        or no protection, the result is that most traffic is sent
        in cleartext.  The fact that most traffic is not encrypted
        makes pervasive monitoring easier by making it cost-effective,
@@ -204,7 +194,7 @@
      </t>
 
      <t>
-       For encryption to be used more broadly, authentication must
+       For encryption to be used more broadly, authentication needs to
        be optional.  The use of encryption defends against pervasive
        monitoring and other passive attacks (which are employed not
        only by nation states).  Even unauthenticated, encrypted
@@ -212,12 +202,11 @@
      </t>
 
      <t>
-       Note that even encryption is not always available.  For
-       example, some application protocols (such as SMTP <xref
-       target="RFC5321"/>, HTTP <xref target="RFC7230"/>, and others)
-       have been deployed by some operators in a cleartext-only
-       mode of operation, even though encrypted modes have been
-       standardized for over a decade.
+       Note that even encryption is not always available and needs
+       to be optional.  For example, some application protocols
+       (such as SMTP <xref target="RFC5321"/>, HTTP <xref
+       target="RFC7230"/>, and others) have been deployed by some
+       operators in a cleartext-only mode of operation.
      </t>
 
     </section>
