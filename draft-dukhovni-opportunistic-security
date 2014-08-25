@@ -38,11 +38,11 @@
   <abstract>
 
    <t>
-     This memo introduces the "Opportunistic Security" (OS) protocol
-     design pattern.  OS aims to remove barriers to the widespread
+     This document introduces the "Opportunistic Security" protocol
+     design pattern.  Opportunistic Security removes barriers to the widespread
      use of encryption on the Internet by using encryption even
-     when authentication is not available, and authentication when
-     also possible.
+     when authentication is not available, and using authentication when
+     possible.
   </t>
 
   </abstract>
@@ -58,7 +58,7 @@
      applies the tools at hand to mitigate the risks that can
      reasonably be addressed, and accepts the rest.  Opportunistic
      Security is related to "opportunity cost", which is the lost
-     benefit of actions not taken.  Accepting the risks one cannot
+     benefit of actions not taken.  Accepting the risks that one cannot
      mitigate is essentially a choice to avoid opportunity cost
      rather than avoid those risks.  A person who chooses to drive
      a car to a store accepts the risk of a car accident, while
@@ -80,7 +80,7 @@
      Encryption is used to mitigate the risk of passive monitoring
      attacks, while authentication is used to mitigate the risk of
      active man-in-the-middle (MiTM) attacks.  When encryption
-     capability is advertised over an insecure channel MiTM downgrade
+     capability is advertised over an insecure channel, MiTM downgrade
      attacks to cleartext may be possible.  Since encryption alone
      mitigates only passive attacks, this risk is consistent with
      the expected level of protection.  For authentication based
@@ -95,11 +95,11 @@
      capabilities will vary from peer to peer, perhaps for a very
      long time.  OS protocols will attempt to establish encrypted
      communication whenever both parties are capable of such,
-     authenticated if that is also possible.  Thus, use of an OS
+     and authenticated communication if that is also possible.  Thus, use of an OS
      protocol may yield communication that is authenticated and
      encrypted, unauthenticated but encrypted, or cleartext.  This
      last outcome will occur if not all parties to a communication
-     support encryption (or if an active attack makes it appear
+     support the same type of encryption (or if an active attack makes it appear
      that this is the case).
    </t>
 
@@ -109,8 +109,8 @@
      security can be raised from cleartext to always require
      encryption.  Similarly, once support for authentication is
      near-universal, the baseline can be raised to always require
-     authentication.  In this light OS is a long-term transition
-     strategy, from a largely cleartext Internet, to an Internet
+     authentication.  In this light, OS is a long-term transition
+     strategy, from a largely cleartext Internet, eventually to an Internet
      in which OS is no longer required.
    </t>
 
@@ -120,7 +120,7 @@
      policy or is otherwise required to access a particular resource.
      In essence, OS is employed when one might otherwise settle for
      cleartext (or the minimum protection possible if the protocol
-     is always encrypted).  Therefore, OS protocols do not preempt
+     is always encrypted).  OS protocols never preempt
      local security policies.  A security administrator may specify
      security policies that override OS.  For example, a policy
      might require authenticated, encrypted communication, in
@@ -135,8 +135,8 @@
        both passive and active attacks.  With each peer, such a
        protocol achieves either full protection or else total failure
        to communicate (hard fail).  As a result, operators often
-       disable these security protocols at the first sign of trouble,
-       degrading all communications to cleartext transmission.
+       disable these security protocols when users have difficulty connnecting,
+       thereby degrading all communications to cleartext transmission.
      </t>
 
      <t>
@@ -155,12 +155,14 @@
        to trust, the communicating parties don't always agree on a
        mutually trusted CA.  Without a mutually trusted CA, authentication
        fails, leading to communications failure in protocols that
-       mandate authentication.  The above issues are compounded by
+       mandate authentication.  These issues are compounded by
        operational difficulties.  For example, a common problem is
        for site operators to forget to perform timely renewal of
        expiring certificates.  In interactive applications, security
        warnings are all too frequent, and end-users learn to actively
-       ignore security problems.
+       ignore security problems, or site administrators decide that
+       the maintenance cost is not worth the benefit so they only
+       provide cleartext communication to their web sites.
      </t>
 
      <t>
@@ -179,20 +181,20 @@
        DNS-Based Authentication of Named Entities (DANE <xref
        target="RFC6698"/>) defines a way to distribute public keys
        bound to DNS names.  It can provide an alternative to the Web
-       PKI.  DANE should be used in conjunction with DNSSEC <xref
+       PKI.  DANE needs to be used in conjunction with DNSSEC <xref
        target="RFC4033"/>.  At the time of writing, DNSSEC is not
        sufficiently widely deployed to allow DANE to satisfy the
        Internet-wide, any-to-any authentication requirement noted
-       above.  Thus protocols that mandate authenticated communication
-       cannot generally do so via DANE (at the time of writing).
+       above.  Protocols that mandate authenticated communication
+       cannot yet generally do so via DANE (at the time of writing).
      </t>
 
      <t>
        The lack of a global key management system means that for
-       many protocols only a minority of communications sessions
-       can be authenticated.  When protocols only offer the choice
-       between authenticated, encrypted communication or no protection,
-       the result is that most traffic is sent in cleartext.  The
+       many protocols, only a minority of communications sessions
+       can be predicatbly authenticated.  When protocols only offer the choice
+       between authenticated and encrypted communication, or no protection,
+       the result is often that most traffic is sent in cleartext.  The
        fact that most traffic is not encrypted makes pervasive
        monitoring easier by making it cost-effective, or at least
        not cost-prohibitive (see <xref target="RFC7258"/> for more
@@ -203,41 +205,40 @@
        For encryption to be used more broadly, authentication must
        be optional.  The use of encryption defends against
        pervasive monitoring and other passive attacks (which are
-       employed not only by nation states).  Even unauthenticated,
-       encrypted communication (see definition in <xref
-       target="sec_terminology"/>) is preferable to cleartext.
+       employed by nation states, criminal organizations, and other large enterprises).  Even unauthenticated,
+       encrypted communication (defined below) is preferable to cleartext.
      </t>
 
      <t>
        Note that even encryption is not always available.  For
-       example, some application protocols (e.g., SMTP <xref
-       target="RFC5321"/>, HTTP <xref target="RFC7230"/>, ...) have
+       example, some application protocols (such as SMTP <xref
+       target="RFC5321"/>, HTTP <xref target="RFC7230"/>, and others) have
        been deployed by some operators in a cleartext-only mode of
-       operation.
+       operation, even when encrypted modes have been standardized for over a decade.
      </t>
 
     </section>
 
-    <section title="A new perspective">
+    <section title="A New Perspective">
 
      <t>
-       This document proposes a change of perspective.  With OS the
-       protocol designer no longer views protection against both
+       This document proposes a change of perspective.  Until now, the
+       protocol designer has viewed protection against both
        passive and active attacks as the default, and anything short
-       of that as "degraded security" or a "fallback".  Rather, the
+       of that as "degraded security" or a "fallback".  Now, with OS, the
        new viewpoint is that without specific knowledge of peer
-       capabilities (or applicable local policy) the default
+       capabilities (or applicable local policy), the default
        protection is no protection, and anything more than that is
        an improvement.
      </t>
 
      <t>
-       Cleartext is the default baseline, not comprehensive protection.
+       Cleartext, not comprehensive protection, is the default baseline.
        An OS protocol is not falling back from comprehensive
-       protection when that is not supported by all peers, rather
-       it employs the maximum protection possible.  OS protocols
+       protection when that protection is not supported by all peers; rather,
+       OS protocols employ the maximum protection possible.  OS protocols
        work transparently behind the scenes, without disrupting
-       communication in the absence of an attack.
+       communication.
      </t>
 
      <t>
@@ -245,8 +246,8 @@
        no need to prompt the user with "your security may be degraded,
        please click OK" dialogs.  The negotiated protection is as
        good as can be expected.  Even if not comprehensive, it is
-       often better than the traditional alternative of employing
-       no protection, or communications failure.
+       often better than the traditional alternative of allowing
+       the choice between "no protection" or "communications failure".
      </t>
 
      <t>
@@ -255,14 +256,14 @@
        protocol uses as much protection as possible.  The adjective
        "opportunistic" applies to the adaptive choice of security
        mechanisms peer by peer.  Once that choice is made for a
-       given peer, Opportunistic Security looks rather similar to
+       given peer, OS looks rather similar to
        other designs that happen to use the same set of mechanisms.
      </t>
 
      <t>
        The remainder of this document provides definitions of
-       critical terms, sets out the OS design principles, and
-       provides an example of an OS design, in the context of
+       important terms, sets out the OS design principles, and
+       provides an example of an OS design in the context of
        communication between mail relays.
      </t>
 
@@ -275,43 +276,50 @@
    <t>
      <list style="hanging">
 
-       <t hangText="Perfect Forward Secrecy (PFS):"> As defined in
-       <xref target="RFC4949"/>.  </t>
-
-       <t hangText="Man-in-the-Middle (MiTM) attack:"> As defined
-       in <xref target="RFC4949"/>.  </t>
-
        <t hangText="Trust on First Use (TOFU):">In a protocol, TOFU
-       calls for accepting and storing a public key/credential
+       calls for accepting and storing a public key or credential
        associated with an asserted identity, without authenticating
        that assertion.  Subsequent communication that is authenticated
-       using the cached key/credential is secure against an MiTM
+       using the cached key or credential is secure against an MiTM
        attack, if such an attack did not succeed during the
-       vulnerable initial communication.  The SSH <xref
-       target="RFC4251"/> protocol makes use of TOFU.  The phrase
+       vulnerable initial communication.  The SSH protocol <xref
+       target="RFC4251"/> in its commonly deployed form makes use of TOFU.  The phrase
        "leap of faith" (LoF, <xref target="RFC4949"/>) is sometimes
        used as a synonym.  </t>
 
        <t hangText="Authenticated, encrypted communication:">
        Encrypted communication using a session establishment method
-       in which at least the initiator (client) authenticates the
-       identity of the acceptor (server).  This is required to
+       in which at least the initiator (or client) authenticates the
+       identity of the acceptor (or server).  This is required to
        protect against both passive and active attacks.  Mutual
        authentication, in which the server also authenticates the
        client, plays a role in mitigating active attacks when the
        client and server roles change in the course of a single
-       session.  Note that authenticated, encrypted communication
-       is not synonymous with use of AEAD <xref target="RFC5116"/>.
-       AEAD algorithms can be used with either authenticated or
-       unauthenticated peers. </t>
+       session. </t>
+
+<!-- I removed "Note that authenticated, encrypted communication is not synonymous with use of AEAD
+<xref target="RFC5116"/>. AEAD algorithms can be used with either authenticated or unauthenticated
+peers." because it is a non sequitur; it is only used in thse two definitions. --> 
 
        <t hangText="Unauthenticated, encrypted communication:">Encrypted
        communication using a session establishment method that does
        not authenticate the identities of the peers.  In typical
        usage, this means that the initiator (client) has not verified
        the identity of the target (server), making MiTM attacks
-       possible.  Note that unauthenticated, encrypted communication
-       is not synonymous with non-use of AEAD <xref target="RFC5116"/>.  </t>
+       possible.  </t>
+
+<!-- I removed "Note that unauthenticated, encrypted communication is not synonymous with non-use of
+AEAD <xref target="RFC5116"/>." because it is a non sequitur; it is only used in thse two
+definitions. --> 
+
+<!-- I moved these two because it felt weird to start a list of terms defined
+with two terms that are defined in some other document. -->
+
+       <t hangText="Perfect Forward Secrecy (PFS):"> As defined in
+       <xref target="RFC4949"/>.  </t>
+
+       <t hangText="Man-in-the-Middle (MiTM) attack:"> As defined
+       in <xref target="RFC4949"/>.  </t>
 
      </list>
    </t>
@@ -334,8 +342,8 @@
 
      <t hangText="Coexist with local policy:">Local security policies
      preempt OS.  Opportunistic security never displaces or preempts
-     local policy.  Some applications or data may be too sensitive
-     to use OS, and more traditional security designs may be
+     local policy.  Many applications and types of data are too sensitive
+     to use OS, and more traditional security designs are
      appropriate in such cases.  </t>
 
      <t hangText="Emphasize enabling communication:">The primary
@@ -345,13 +353,13 @@
      administrator or user.  </t>
 
      <t hangText="Maximize security peer by peer:"> OS protocols
-     use encryption when mutually supported.  OS protocols enforce
+     use encryption when it is mutually supported.  OS protocols enforce
      peer authentication when an authenticated out-of-band channel
-     is available to provide the requisite keys/credentials.
-     Communications traffic should generally be at least encrypted.  </t>
+     is available to provide the requisite keys or credentials.
+     Communication should generally be at least encrypted.  </t>
 
-     <t hangText="Employ PFS:"> Opportunistic Security should employ
-     Perfect Forward Secrecy (PFS) to protect previously recorded
+     <t hangText="Employ PFS:"> OS should employ
+     Perfect Forward Secrecy (PFS) wherever possible in order to protect previously recorded
      encrypted communication from decryption even after a compromise
      of long-term keys. </t>
 
@@ -362,6 +370,8 @@
 
     </list>
    </t>
+
+<!-- The following paragraph is redundant and should be removed, not rewritten. -->
 
    <t>
      Security mechanisms that don't disrupt communications are more
@@ -375,10 +385,10 @@
    <t>
      An OS protocol first determines the capabilities of the peer
      with which it is attempting to communicate.  Peer capabilities
-     may be discovered by out-of-band or in-band means.  (In-band
-     determination implies negotiation between peers.  Out-of-band
+     may be discovered by out-of-band or in-band means.  (Out-of-band
      mechanisms include the use of DANE records or cached
-     keys/credentials acquired via TOFU.)  The capability determination
+     keys or credentials acquired via TOFU. In-band
+     determination implies negotiation between peers.)  The capability determination
      phase may indicate that the peer supports authenticated,
      encrypted communication; unauthenticated, encrypted communication;
      or only cleartext communication.
@@ -393,9 +403,6 @@
      peer match the deployed reality.  Otherwise, OS systems will
      detect such a broken deployment as an active attack and
      communication may fail.
-   </t>
-
-   <t>
      This might mean that advertised peer capabilities are further
      filtered to consider only those capabilities that are sufficiently
      operationally reliable.  Capabilities that can't be expected
@@ -405,10 +412,10 @@
 
    <t>
      For greater assurance of channel security, an OS protocol may
-     to enforce more stringent cryptographic parameters when the
+     enforce more stringent cryptographic parameters when the
      session is authenticated.  For example, the set of enabled
      Transport Layer Security (TLS <xref target="RFC5246"/>)
-     cipher-suites might be more restrictive when in that case.
+     ciphersuites might be more restrictive authenticating sessions.
    </t>
 
    <t>
@@ -417,7 +424,7 @@
      means a determination via a downgrade-resistant method that
      authentication of that peer is expected to work.  Downgrade-resistant
      methods include: validated DANE DNS records, existing TOFU
-     identity information, or manual configuration.  Such use of
+     identity information, and manual configuration.  Such use of
      authentication is "opportunistic", in that it is performed
      when possible, on a per-session basis.
    </t>
@@ -473,19 +480,19 @@
 
    <t>
      Some client MTAs employing STARTTLS abandon the TLS handshake
-     when the server MTA fails authentication, only to immediately
-     transmit the same message in cleartext.  Other MTAs have been
+     when the server MTA fails authentication, and immediately
+     start a cleartext connection.  Other MTAs have been
      observed to accept unverified self-signed certificates, but
      not expired certificates; again falling back to cleartext.
      These and similar behaviors are NOT consistent with OS principles,
-     since they needlessly fall back to cleartext.
+     since they needlessly fall back to cleartext when some encryption is clearly possible.
    </t>
 
    <t>
      Protection against active attacks for SMTP is described in
-     <xref target="I-D.ietf-dane-smtp-with-dane"/>.  That draft
+     <xref target="I-D.ietf-dane-smtp-with-dane"/>.  That document
      introduces the terms "Opportunistic TLS" and "Opportunistic
-     DANE TLS"; and is consistent with the OS design principles
+     DANE TLS", and is consistent with the OS design principles
      defined in this document.  With "Opportunistic DANE TLS",
      authenticated, encrypted communication is enforced with peers
      for which appropriate DANE records are present.  For the
@@ -529,7 +536,7 @@
      OS supports communication that is authenticated and encrypted,
      unauthenticated and encrypted, or cleartext.  And yet the
      security provided to communicating peers is not reduced by the
-     use of OS.  This is because the default OS policy employs the
+     use of OS because the default OS policy employs the
      best security services available based on the capabilities of
      the peers, and because local security policies take precedence
      over the default OS policy.  OS is an improvement over the
@@ -539,8 +546,8 @@
    </t>
 
    <t>
-     While Opportunistic Security is preempted by non-OS local
-     policy, such non-OS policy can be counter-productive when it
+     While the use of OS is preempted by a non-OS local
+     policy, such a non-OS policy can be counter-productive when it
      demands more than many peers can in fact deliver.  Non-OS
      policy should be used with care, lest users find it too
      restrictive and act to disable security entirely.
