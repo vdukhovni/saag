@@ -502,9 +502,7 @@
   <dt>Emphasize enabling communication:</dt>
   <dd style="margin-left: 8">The primary goal of OS is to enable communication and maximize the deployment of usable security.  OS protocols need to be deployable incrementally, with each peer configured independently by its administrator or user.  </dd>
   <dt>Maximize security peer by peer:</dt>
-  <dd style="margin-left: 8">OS protocols use encryption when it is mutually supported.  OS protocols enforce peer authentication when an authenticated out-of-band channel is available to provide the requisite keys or credentials.  Communication should generally be at least encrypted.  </dd>
-  <dt>Employ PFS:</dt>
-  <dd style="margin-left: 8">OS should employ Perfect Forward Secrecy (PFS) wherever possible in order to protect previously recorded encrypted communication from decryption even after a compromise of long-term keys. </dd>
+  <dd style="margin-left: 8">OS protocols use encryption when it is mutually supported.  OS protocols enforce peer authentication when an authenticated out-of-band channel is available to provide the requisite keys or credentials.  Communication should generally be at least encrypted.  OS should employ Perfect Forward Secrecy (PFS) wherever possible in order to protect previously recorded encrypted communication from decryption even after a compromise of long-term keys.  </dd>
   <dt>No misrepresentation of security:</dt>
   <dd style="margin-left: 8">Unauthenticated, encrypted communication must not be misrepresented to users or in application logs of non-interactive applications as equivalent to authenticated, encrypted communication.  </dd>
 </dl>
@@ -551,12 +549,6 @@
         <b id="RFC4251">[RFC4251]</b>
       </td>
       <td class="top"><a>Ylonen, T.</a> and <a>C. Lonvick</a>, "<a href="http://tools.ietf.org/html/rfc4251">The Secure Shell (SSH) Protocol Architecture</a>", RFC 4251, January 2006.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="RFC5116">[RFC5116]</b>
-      </td>
-      <td class="top"><a>McGrew, D.</a>, "<a href="http://tools.ietf.org/html/rfc5116">An Interface and Algorithms for Authenticated Encryption</a>", RFC 5116, January 2008.</td>
     </tr>
     <tr>
       <td class="reference">
