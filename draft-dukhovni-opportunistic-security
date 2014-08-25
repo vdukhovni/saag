@@ -349,12 +349,10 @@
      use encryption when it is mutually supported.  OS protocols
      enforce peer authentication when an authenticated out-of-band
      channel is available to provide the requisite keys or credentials.
-     Communication should generally be at least encrypted.  </t>
-
-     <t hangText="Employ PFS:"> OS should employ Perfect Forward
-     Secrecy (PFS) wherever possible in order to protect previously
-     recorded encrypted communication from decryption even after a
-     compromise of long-term keys. </t>
+     Communication should generally be at least encrypted.  OS
+     should employ Perfect Forward Secrecy (PFS) wherever possible
+     in order to protect previously recorded encrypted communication
+     from decryption even after a compromise of long-term keys.  </t>
 
      <t hangText="No misrepresentation of security:"> Unauthenticated,
      encrypted communication must not be misrepresented to users
