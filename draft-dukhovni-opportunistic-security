@@ -5,7 +5,6 @@
   <!ENTITY rfc4033 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4033.xml">
   <!ENTITY rfc4251 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4251.xml">
   <!ENTITY rfc4949 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4949.xml">
-  <!ENTITY rfc5116 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5116.xml">
   <!ENTITY rfc5246 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
   <!ENTITY rfc5321 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5321.xml">
   <!ENTITY rfc5598 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5598.xml">
@@ -555,7 +554,6 @@
    &rfc3207;
    &rfc4033;
    &rfc4251;
-   &rfc5116;
    &rfc5246;
    &rfc5321;
    &rfc6698;
