@@ -373,8 +373,8 @@
   <meta name="dct.creator" content="Dukhovni, V." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-dukhovni-opportunistic-security-04" />
   <meta name="dct.issued" scheme="ISO8601" content="2014-8-25" />
-  <meta name="dct.abstract" content="This document defines the concept &quot;Opportunistic Security&quot; in the context of communications security protocols.  Protocol designs based on Opportunistic Security remove barriers to the widespread use of encryption on the Internet by using encryption even when authentication is not available, and using authentication when possible.  " />
-  <meta name="description" content="This document defines the concept &quot;Opportunistic Security&quot; in the context of communications security protocols.  Protocol designs based on Opportunistic Security remove barriers to the widespread use of encryption on the Internet by using encryption even when authentication is not available, and using authentication when possible.  " />
+  <meta name="dct.abstract" content="This document defines the concept &quot;Opportunistic Security&quot; in the context of communications protocols.  Protocol designs based on Opportunistic Security remove barriers to the widespread use of encryption on the Internet by using encryption even when authentication is not available, and using authentication when possible.  " />
+  <meta name="description" content="This document defines the concept &quot;Opportunistic Security&quot; in the context of communications protocols.  Protocol designs based on Opportunistic Security remove barriers to the widespread use of encryption on the Internet by using encryption even when authentication is not available, and using authentication when possible.  " />
 
 </head>
 
@@ -410,7 +410,7 @@
   <h1 id="rfc.abstract">
   <a href="#rfc.abstract">Abstract</a>
 </h1>
-<p>This document defines the concept "Opportunistic Security" in the context of communications security protocols.  Protocol designs based on Opportunistic Security remove barriers to the widespread use of encryption on the Internet by using encryption even when authentication is not available, and using authentication when possible.  </p>
+<p>This document defines the concept "Opportunistic Security" in the context of communications protocols.  Protocol designs based on Opportunistic Security remove barriers to the widespread use of encryption on the Internet by using encryption even when authentication is not available, and using authentication when possible.  </p>
 <h1 id="rfc.status">
   <a href="#rfc.status">Status of This Memo</a>
 </h1>
@@ -468,7 +468,7 @@
 <p id="rfc.section.1.1.p.5">DNS-Based Authentication of Named Entities (DANE <a href="#RFC6698">[RFC6698]</a>) defines a way to distribute public keys bound to DNS names.  It can provide an alternative to the Web PKI.  DANE needs to be used in conjunction with DNSSEC <a href="#RFC4033">[RFC4033]</a>.  At the time of writing, DNSSEC is not sufficiently widely deployed to allow DANE to satisfy the Internet-wide, any-to-any authentication requirement noted above.  Protocols that mandate authenticated communication cannot yet generally do so via DANE (at the time of writing).  </p>
 <p id="rfc.section.1.1.p.6">The lack of a global key management system means that for many protocols, only a minority of communications sessions can be predictably authenticated.  When protocols only offer a choice between authenticated-and-encrypted communication, or no protection, the result is that most traffic is sent in cleartext.  The fact that most traffic is not encrypted makes pervasive monitoring easier by making it cost-effective, or at least not cost-prohibitive (see <a href="#RFC7258">[RFC7258]</a> for more detail).  </p>
 <p id="rfc.section.1.1.p.7">For encryption to be used more broadly, authentication needs to be optional.  The use of encryption defends against pervasive monitoring and other passive attacks (which are employed not only by nation states).  Even unauthenticated, encrypted communication (defined below) is preferable to cleartext.  </p>
-<p id="rfc.section.1.1.p.8">Note that even encryption is not always available and needs to be optional.  For example, some application protocols (such as SMTP <a href="#RFC5321">[RFC5321]</a>, HTTP <a href="#RFC7230">[RFC7230]</a>, and others) have been deployed by some operators in a cleartext-only mode of operation.  </p>
+<p id="rfc.section.1.1.p.8">For some applications or protocols the set of potential peers includes a long tail of implementations that support only cleartext.  Such applications or protocols cannot set a baseline security policy that requires encryption without losing the ability to communicate with the cleartext-only peers.  </p>
 <h1 id="rfc.section.1.2"><a href="#rfc.section.1.2">1.2.</a> A New Perspective</h1>
 <p id="rfc.section.1.2.p.1">This document proposes a change of perspective.  Until now, the protocol designer has viewed protection against both passive and active attacks as the default, and anything short of that as "degraded security" or a "fallback".  Now, with OS, the new viewpoint is that without specific knowledge of peer capabilities (or applicable local policy), the default protection is no protection, and anything more than that is an improvement.  </p>
 <p id="rfc.section.1.2.p.2">Cleartext, not comprehensive protection, is the default baseline.  An OS protocol is not falling back from comprehensive protection when that protection is not supported by all peers; rather, OS protocols employ the maximum protection possible.  OS protocols work transparently behind the scenes, without disrupting communication.  </p>
@@ -515,7 +515,7 @@
 <p id="rfc.section.3.p.7">When communicating with a peer that supports encryption but not authentication, any authentication checks enabled by default must be disabled or configured to soft-fail in order to avoid unnecessary communications failure or needless downgrade to cleartext.  </p>
 <p id="rfc.section.3.p.8">Cleartext is supported for backwards compatibility with systems already deployed.  Even when cleartext needs to be supported, protocol designs based on Opportunistic Security prefer to encrypt, employing cleartext only with peers that do not appear to be encryption capable.  </p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> Example: Opportunistic TLS in SMTP</h1>
-<p id="rfc.section.4.p.1">Most Message Transfer Agents (MTAs, <a href="#RFC5598">[RFC5598]</a>) support the STARTTLS (<a href="#RFC3207">[RFC3207]</a>) ESMTP extension.  MTAs acting as SMTP clients generally support cleartext transmission of email.  They negotiate TLS encryption when the SMTP server announces STARTTLS support.  Since the initial ESMTP negotiation is not cryptographically protected, the STARTTLS advertisement is vulnerable to MiTM downgrade attacks.  </p>
+<p id="rfc.section.4.p.1">Most Message Transfer Agents (MTAs, <a href="#RFC5598">[RFC5598]</a>) support the STARTTLS (<a href="#RFC3207">[RFC3207]</a>) ESMTP extension.  MTAs acting as SMTP (<a href="#RFC5321">[RFC5321]</a>) clients generally support cleartext transmission of email.  They negotiate TLS encryption when the SMTP server announces STARTTLS support.  Since the initial ESMTP negotiation is not cryptographically protected, the STARTTLS advertisement is vulnerable to MiTM downgrade attacks.  </p>
 <p id="rfc.section.4.p.2">Recent reports from a number of large providers (e.g., <a href="#fb-starttls">[fb-starttls]</a> and <a href="#goog-starttls">[goog-starttls]</a>) suggest that the  majority of SMTP email transmission on the Internet is now encrypted, and the trend is toward increasing adoption.  </p>
 <p id="rfc.section.4.p.3">Various MTAs that advertise STARTTLS exhibit interoperability problems in their implementations.  As a work-around, it is common for a client MTA to fall back to cleartext when the TLS handshake fails, or when TLS fails during message transmission.  This is a reasonable trade-off, since STARTTLS only protects against passive attacks.  In the absence of an active attack TLS failures are generally one of the known interoperability problems.  </p>
 <p id="rfc.section.4.p.4">Some client MTAs employing STARTTLS abandon the TLS handshake when the server MTA fails authentication, and immediately start a cleartext connection.  Other MTAs have been observed to accept unverified self-signed certificates, but not expired certificates; again falling back to cleartext.  These and similar behaviors are NOT consistent with OS principles, since they needlessly fall back to cleartext when encryption is clearly possible.  </p>
@@ -567,12 +567,6 @@
         <b id="RFC6698">[RFC6698]</b>
       </td>
       <td class="top"><a>Hoffman, P.</a> and <a>J. Schlyter</a>, "<a href="http://tools.ietf.org/html/rfc6698">The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</a>", RFC 6698, August 2012.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="RFC7230">[RFC7230]</b>
-      </td>
-      <td class="top"><a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/rfc7230">Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</a>", RFC 7230, June 2014.</td>
     </tr>
   </tbody>
 </table>
