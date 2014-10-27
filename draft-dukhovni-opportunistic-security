@@ -69,26 +69,27 @@
        Protection against active attacks requires authentication. The
        ability to authenticate any potential peer on the Internet
        requires an authentication mechanism that encompasses all such
-       peers.  No IETF standards for authentication scales as needed and
-       have been deployed widely enough to meet this requirement.
+       peers.  No IETF standard for authentication scales as needed and
+       has been deployed widely enough to meet this requirement.
      </t>
 
      <t>
-       The Public Key Infrastructure (PKI) model employed by browsers to
-       authenticate web servers (often called the "Web PKI") imposes
-       cost and management burdens that have limited its use.  With so
-       many Certification Authorities (CAs), not all of which everyone
-       is willing to trust, the communicating parties don't always agree
-       on a mutually trusted CA.  Without a mutually trusted CA,
-       authentication fails, leading to communications failure in
-       protocols that mandate authentication.  These issues are
-       compounded by operational difficulties.  For example, a common
-       problem is for site operators to forget to perform timely renewal
-       of expiring certificates.  In interactive applications, security
-       warnings are all too frequent, and end-users learn to actively
-       ignore security problems, or site administrators decide that the
-       maintenance cost is not worth the benefit so they provide a
-       cleartext-only service to their users.
+       The Public Key Infrastructure (PKI) model employed by browsers
+       to authenticate web servers (often called the "Web PKI")
+       imposes cost and management burdens that have limited its
+       use.  With so many Certification Authorities (CAs), not all
+       of which everyone is willing to trust, the communicating
+       parties don't always agree on a mutually trusted CA.  Without
+       a mutually trusted CA, authentication fails, leading to
+       communications failure in protocols that mandate authentication.
+       These issues are compounded by operational difficulties.
+       For example, a common problem is for site operators to forget
+       to perform timely renewal of expiring certificates.  In Web
+       PKI interactive applications, security warnings are all too
+       frequent, and end-users learn to actively ignore security
+       problems, or site administrators decide that the maintenance
+       cost is not worth the benefit so they provide a cleartext-only
+       service to their users.
      </t>
 
      <t>
@@ -99,8 +100,8 @@
        against an attacker who can hijack the first contact
        communication and require more care from the end-user when
        systems update their cryptographic keys.  TOFU can make it
-       difficult to distinguish routine system administration from
-       a malicious attack.
+       difficult to distinguish routine key management from a
+       malicious attack.
      </t>
 
      <t>
@@ -143,29 +144,33 @@
        This document describes a change of perspective.  Until now,
        the protocol designer has viewed protection against both
        passive and active attacks as the default, and anything short
-       of that as "degraded security" or a "fallback".
+       of that as "degraded security" or a "fallback".  The new
+       viewpoint is that without specific knowledge of peer
+       capabilities (or explicit configuration or direct request
+       of the application), the default protection is no protection,
+       and anything more than that is an improvement.
      </t>
 
-     <t>
-       "Opportunistic Security" (OS) is defined as the use of cleartext
-       as the default baseline for secure communications, with
-       encryption and authentication being opportunistically negotiated
-       and applied to the communication when they are available. The new
-       viewpoint is that without specific knowledge of peer capabilities
-       (or explicit configuration or direct request of the application),
-       the default protection is no protection, and anything more than
-       that is an improvement.
-    </t>
+     <t> <list style="hanging">
+       <t hangText="Definition:"> In the context of communications
+       protocols, "Opportunistic Security" (OS) is defined as the
+       use of encryption when possible, with authentication when
+       possible.  The phrase "when possible" means when support for
+       the corresponding capability is advertised by the peer,
+       ideally in a downgrade-resistant manner.</t>
+     </list> </t>
 
      <t>
-       Cleartext, not comprehensive protection, is the default baseline.
-       An OS protocol is not falling back from comprehensive protection
-       when that protection is not supported by all peers; rather, OS
-       protocols employ the maximum protection possible.  (Of course, in
-       the future all but a negligible fraction of peers might support
-       encryption. At that time, the baseline security might be raised
-       from cleartext to always require encryption, and only
-       authentication would have to be done opportunistically.)
+       Cleartext, not comprehensive protection, is the default
+       baseline.  An OS protocol is not falling back from comprehensive
+       protection when that protection is not supported by all
+       peers; rather, OS protocols aim to use the maximum protection
+       that is available.  (At some point in time for a particular
+       application or protocol all but a negligible fraction of
+       peers might support encryption.  At that time, the baseline
+       security might be raised from cleartext to always require
+       encryption, and only authentication would have to be done
+       opportunistically.)
      </t>
 
      <t>
@@ -355,11 +360,21 @@
    </t>
 
    <t>
+     OS interoperates with legacy cleartext-only peers.  Some legacy
+     systems advertise support for encryption, but implement only
+     outdated algorithms or protocol versions.  With unauthenticated,
+     encrypted communication, OS protocols may employ more liberal
+     settings than would be best-practice when security is mandated
+     by policy.
+   </t>
+
+   <t>
      For greater assurance of channel security, an OS protocol may
      enforce more stringent cryptographic parameters when the session
      is authenticated.  For example, the set of enabled Transport
      Layer Security (TLS <xref target="RFC5246"/>) cipher suites
-     might be more restrictive for authenticated sessions.
+     might exclude deprecated algorithms that would be tolerated
+     with unauthenticated, encrypted communication.
    </t>
 
    <t>
