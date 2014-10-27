@@ -151,15 +151,12 @@
        and anything more than that is an improvement.
      </t>
 
-     <t> <list style="hanging">
-       <t hangText="Definition:"> "Opportunistic Security" (OS) is
-       the use of cleartext as the baseline communication security
-       policy, with encryption and authentication negotiated and
-       applied to the communication when available.  The phrase
-       "when available" means when support for the corresponding
-       capability is advertised by the peer, ideally in a
-       downgrade-resistant manner.</t>
-     </list> </t>
+     <t>
+       "Opportunistic Security" (OS) is defined as the use of
+       cleartext as the baseline communication security policy,
+       with encryption and authentication negotiated and applied
+       to the communication when available.
+     </t>
 
      <t>
        Cleartext, not comprehensive protection, is the default
@@ -298,9 +295,9 @@
      OS is to not impede communication while maximizing the deployment
      of usable security.  OS protocols need to be deployable
      incrementally, with each peer configured independently by its
-     administrator or user.  With OS, communication remains possible
-     between peers at different stages of deployment of encryption
-     and authentication technology.  </t>
+     administrator or user.  With OS, communication is still possible
+     even when some peers support encryption or authentication and
+     others do not. </t>
 
      <t hangText="Maximize security peer by peer:"> OS protocols
      use encryption when it is mutually supported.  OS protocols
@@ -361,12 +358,12 @@
    </t>
 
    <t>
-     OS interoperates with legacy cleartext-only peers.  Some legacy
-     systems advertise support for encryption, but implement only
-     outdated algorithms or protocol versions.  With unauthenticated,
-     encrypted communication, OS protocols may employ more liberal
-     settings than would be best-practice when security is mandated
-     by policy.
+     With unauthenticated, encrypted communication, OS protocols
+     may employ more liberal settings than would be best-practice
+     when security is mandated by policy.  Some legacy systems
+     support encryption, but implement only outdated algorithms or
+     protocol versions.  Compatibility with these systems avoids
+     the need to resort to cleartext fallback.
    </t>
 
    <t>
