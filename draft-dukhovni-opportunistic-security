@@ -152,12 +152,13 @@
      </t>
 
      <t> <list style="hanging">
-       <t hangText="Definition:"> In the context of communications
-       protocols, "Opportunistic Security" (OS) is defined as the
-       use of encryption when possible, with authentication when
-       possible.  The phrase "when possible" means when support for
-       the corresponding capability is advertised by the peer,
-       ideally in a downgrade-resistant manner.</t>
+       <t hangText="Definition:"> "Opportunistic Security" (OS) is
+       the use of cleartext as the baseline communication security
+       policy, with encryption and authentication negotiated and
+       applied to the communication when available.  The phrase
+       "when available" means when support for the corresponding
+       capability is advertised by the peer, ideally in a
+       downgrade-resistant manner.</t>
      </list> </t>
 
      <t>
