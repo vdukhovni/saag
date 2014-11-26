@@ -1,4 +1,4 @@
-OS_VERSION = 05
+OS_VERSION = 06
 
 OS	= draft-dukhovni-opportunistic-security
 

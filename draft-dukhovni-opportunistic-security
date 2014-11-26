@@ -266,6 +266,9 @@
        <t hangText="Man-in-the-Middle (MiTM) attack:"> As defined
        in <xref target="RFC4949"/>.  </t>
 
+       <t hangText="OS protocol:">A protocol that follows the
+       opportunistic approach to security described herein.  </t>
+
      </list>
    </t>
 
@@ -395,11 +398,16 @@
    </t>
 
    <t>
-     Cleartext is supported for backwards compatibility with systems
-     already deployed.  Even when cleartext needs to be supported,
-     protocol designs based on Opportunistic Security prefer to
-     encrypt, employing cleartext only with peers that do not appear
-     to be encryption capable.
+     The support of cleartext and the use of outdated algorithms, and
+     especially broken algorithms, is for backwards compatibility with
+     systems already deployed.  Protocol designs based on Opportunistic
+     Security prefer to encrypt, and prefer to use the best available
+     encryption algorithms available.  OS protocols employ cleartext or
+     broken encryption algorithms only with peers that do not appear to be
+     capable of doing otherwise.  The eventual desire is to transition
+     away from cleartext and broken algorithms, and particularly for
+     broken algorithms, it is highly desirable to remove such
+     functionality from implementations.
    </t>
 
   </section>
@@ -509,6 +517,34 @@
      to disable security entirely.
    </t>
 
+   <t>
+     When protocols follow the OS approach, attackers engaged in
+     large scale passive monitoring can no longer just collect
+     everything, and have to be more selective and/or mount more
+     active attacks. And OS means active attacks on everyone all
+     the time are much more likely to be noticed.
+   </t>
+
+   <t>
+     Specific techniques for detection and mitigation of active
+     attacks in the absence of authentication are out of scope for
+     this document. Some existing protocols that could support
+     OS may be vulnerable to relatively low-cost downgrade attacks
+     for attackers on the path.  However, when such attacks are
+     employed pervasively in order to facilitate e,g, surveillance,
+     this is often detectable; hence, even in such scenarios
+     OS protocols provide a positive benefit.
+   </t>
+
+   <t>
+     Protocols following the OS approach may need to define
+     additional measures to make systematic downgrades less
+     likely to succeed or more likely to be detected. When we
+     have more experience in this space future revisions of this
+     or related documents may be able to make more generally
+     applicable recommendations.
+   </t>
+
   </section>
 
   <section anchor="Acknowledgements" title="Acknowledgements">
@@ -529,12 +565,12 @@
    &rfc3207;
    &rfc4033;
    &rfc4251;
+   &rfc4949;
    &rfc5246;
    &rfc5321;
    &rfc6698;
   </references>
   <references title="Informative References">
-   &rfc4949;
    &rfc5598;
    &rfc7258;
    &I-D.ietf-dane-smtp-with-dane;
